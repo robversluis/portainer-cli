@@ -191,7 +191,7 @@ func (s *StackService) Deploy(endpointID int, name, stackFileContent string, env
 	return &stack, nil
 }
 
-func (s *StackService) Update(stackID int, stackFileContent string, env []StackEnv) error {
+func (s *StackService) Update(stackID, endpointID int, stackFileContent string, env []StackEnv) error {
 	body := &bytes.Buffer{}
 	writer := multipart.NewWriter(body)
 
@@ -213,7 +213,7 @@ func (s *StackService) Update(stackID int, stackFileContent string, env []StackE
 		return fmt.Errorf("failed to close multipart writer: %w", err)
 	}
 
-	path := fmt.Sprintf("stacks/%d?endpointId=1", stackID)
+	path := fmt.Sprintf("stacks/%d?endpointId=%d", stackID, endpointID)
 	
 	req, err := s.client.newRequest(http.MethodPut, path, nil)
 	if err != nil {

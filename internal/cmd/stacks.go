@@ -268,6 +268,14 @@ var stacksUpdateCmd = &cobra.Command{
 			return fmt.Errorf("invalid stack ID: %s", args[0])
 		}
 
+		endpointID, err := cmd.Flags().GetInt("endpoint")
+		if err != nil {
+			return err
+		}
+		if endpointID == 0 {
+			return fmt.Errorf("--endpoint flag is required")
+		}
+
 		stackFile, err := cmd.Flags().GetString("file")
 		if err != nil {
 			return err
@@ -310,7 +318,7 @@ var stacksUpdateCmd = &cobra.Command{
 			})
 		}
 
-		if err := stackService.Update(stackID, content, env); err != nil {
+		if err := stackService.Update(stackID, endpointID, content, env); err != nil {
 			return err
 		}
 
@@ -346,7 +354,9 @@ func init() {
 	stacksRemoveCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
 	stacksRemoveCmd.MarkFlagRequired("endpoint")
 
+	stacksUpdateCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
 	stacksUpdateCmd.Flags().String("file", "", "Path to stack file (required)")
 	stacksUpdateCmd.Flags().StringArray("env", []string{}, "Environment variables (KEY=VALUE)")
+	stacksUpdateCmd.MarkFlagRequired("endpoint")
 	stacksUpdateCmd.MarkFlagRequired("file")
 }
