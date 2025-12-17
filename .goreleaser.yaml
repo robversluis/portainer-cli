@@ -1,0 +1,212 @@
+project_name: portainer-cli
+
+before:
+  hooks:
+    - go mod tidy
+    - go test ./...
+
+builds:
+  - id: portainer-cli
+    main: ./cmd/portainer-cli
+    binary: portainer-cli
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+      - arm
+    goarm:
+      - "7"
+    ignore:
+      - goos: windows
+        goarch: arm
+      - goos: windows
+        goarch: arm64
+    ldflags:
+      - -s -w
+      - -X main.Version={{.Version}}
+      - -X main.BuildTime={{.Date}}
+      - -X main.Commit={{.Commit}}
+
+archives:
+  - id: portainer-cli
+    format: tar.gz
+    name_template: >-
+      {{ .ProjectName }}_
+      {{- .Version }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else if eq .Arch "386" }}i386
+      {{- else }}{{ .Arch }}{{ end }}
+      {{- if .Arm }}v{{ .Arm }}{{ end }}
+    format_overrides:
+      - goos: windows
+        format: zip
+    files:
+      - README.md
+      - LICENSE
+      - CHANGELOG.md
+      - docs/**/*
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+
+changelog:
+  sort: asc
+  use: github
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - '^chore:'
+      - 'merge conflict'
+      - Merge pull request
+      - Merge remote-tracking branch
+      - Merge branch
+  groups:
+    - title: Features
+      regexp: "^.*feat[(\\w)]*:+.*$"
+      order: 0
+    - title: 'Bug fixes'
+      regexp: "^.*fix[(\\w)]*:+.*$"
+      order: 1
+    - title: 'Performance improvements'
+      regexp: "^.*perf[(\\w)]*:+.*$"
+      order: 2
+    - title: Others
+      order: 999
+
+release:
+  github:
+    owner: rob
+    name: portainer-cli
+  draft: false
+  prerelease: auto
+  mode: replace
+  header: |
+    ## Portainer CLI {{ .Tag }} ({{ .Date }})
+    
+    Welcome to the first release of Portainer CLI! 🎉
+    
+    This release provides comprehensive command-line access to Portainer's API for managing Docker containers, images, volumes, networks, stacks, and more.
+    
+    ### Installation
+    
+    Download the appropriate binary for your platform from the assets below, extract it, and add it to your PATH.
+    
+    ### Quick Start
+    
+    ```bash
+    # Initialize configuration
+    portainer-cli config init
+    
+    # Login to your Portainer instance
+    portainer-cli auth login --url https://your-portainer-url --username admin
+    
+    # List environments
+    portainer-cli environments list
+    
+    # List containers in an environment
+    portainer-cli containers list --endpoint 1
+    ```
+    
+    For more information, see the [README](https://github.com/rob/portainer-cli/blob/main/README.md).
+  footer: |
+    **Full Changelog**: https://github.com/rob/portainer-cli/blob/main/CHANGELOG.md
+    
+    ---
+    
+    Thank you for using Portainer CLI!
+
+brews:
+  - name: portainer-cli
+    repository:
+      owner: rob
+      name: homebrew-tap
+    directory: Formula
+    homepage: https://github.com/rob/portainer-cli
+    description: Command-line interface for Portainer
+    license: MIT
+    install: |
+      bin.install "portainer-cli"
+      
+      bash_completion.install "completions/portainer-cli.bash" => "portainer-cli"
+      zsh_completion.install "completions/_portainer-cli" => "_portainer-cli"
+      fish_completion.install "completions/portainer-cli.fish"
+    test: |
+      system "#{bin}/portainer-cli", "version"
+
+nfpms:
+  - id: portainer-cli
+    package_name: portainer-cli
+    file_name_template: >-
+      {{ .ProjectName }}_
+      {{- .Version }}_
+      {{- .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else }}{{ .Arch }}{{ end }}
+    vendor: Rob
+    homepage: https://github.com/rob/portainer-cli
+    maintainer: Rob <rob@example.com>
+    description: Command-line interface for Portainer
+    license: MIT
+    formats:
+      - deb
+      - rpm
+      - apk
+    bindir: /usr/bin
+    contents:
+      - src: ./completions/portainer-cli.bash
+        dst: /usr/share/bash-completion/completions/portainer-cli
+        file_info:
+          mode: 0644
+      - src: ./completions/_portainer-cli
+        dst: /usr/share/zsh/site-functions/_portainer-cli
+        file_info:
+          mode: 0644
+      - src: ./completions/portainer-cli.fish
+        dst: /usr/share/fish/vendor_completions.d/portainer-cli.fish
+        file_info:
+          mode: 0644
+
+dockers:
+  - image_templates:
+      - "ghcr.io/rob/portainer-cli:{{ .Version }}-amd64"
+      - "ghcr.io/rob/portainer-cli:latest-amd64"
+    use: buildx
+    dockerfile: Dockerfile
+    build_flag_templates:
+      - "--platform=linux/amd64"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+  - image_templates:
+      - "ghcr.io/rob/portainer-cli:{{ .Version }}-arm64"
+      - "ghcr.io/rob/portainer-cli:latest-arm64"
+    use: buildx
+    dockerfile: Dockerfile
+    build_flag_templates:
+      - "--platform=linux/arm64"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.title={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+    goarch: arm64
+
+docker_manifests:
+  - name_template: "ghcr.io/rob/portainer-cli:{{ .Version }}"
+    image_templates:
+      - "ghcr.io/rob/portainer-cli:{{ .Version }}-amd64"
+      - "ghcr.io/rob/portainer-cli:{{ .Version }}-arm64"
+  - name_template: "ghcr.io/rob/portainer-cli:latest"
+    image_templates:
+      - "ghcr.io/rob/portainer-cli:latest-amd64"
+      - "ghcr.io/rob/portainer-cli:latest-arm64"
