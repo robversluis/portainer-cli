@@ -1,0 +1,40 @@
+# Example Portainer CLI Configuration File
+# Location: ~/.portainer-cli/config.yaml or $XDG_CONFIG_HOME/portainer-cli/config.yaml
+
+# The current/default profile to use when no --profile flag is specified
+current_profile: production
+
+# Profile definitions
+profiles:
+  # Production environment with API key authentication
+  production:
+    url: https://portainer.prod.example.com
+    api_key: prod-api-key-here
+    insecure: false
+
+  # Staging environment with username authentication
+  staging:
+    url: https://portainer.staging.example.com
+    username: admin
+    # Token will be stored here after login
+    token: jwt-token-after-login
+    insecure: false
+
+  # Development environment (local)
+  development:
+    url: http://localhost:9000
+    api_key: dev-api-key
+    # Skip TLS verification for local development
+    insecure: true
+
+  # Edge environment example
+  edge:
+    url: https://portainer.edge.example.com
+    api_key: edge-api-key
+    insecure: false
+
+# Notes:
+# - At least one authentication method is required per profile (api_key, username, or token)
+# - The 'insecure' flag skips TLS certificate verification (use with caution)
+# - This file should have 0600 permissions (rw-------)
+# - Never commit this file to version control
