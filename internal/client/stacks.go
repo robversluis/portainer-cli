@@ -16,26 +16,26 @@ type StackService struct {
 }
 
 type Stack struct {
-	Id                 int                    `json:"Id"`
-	Name               string                 `json:"Name"`
-	Type               int                    `json:"Type"`
-	EndpointId         int                    `json:"EndpointId"`
-	SwarmId            string                 `json:"SwarmId,omitempty"`
-	EntryPoint         string                 `json:"EntryPoint"`
-	Env                []StackEnv             `json:"Env"`
-	ResourceControl    *ResourceControl       `json:"ResourceControl,omitempty"`
-	Status             int                    `json:"Status,omitempty"`
-	ProjectPath        string                 `json:"ProjectPath,omitempty"`
-	CreationDate       int64                  `json:"CreationDate,omitempty"`
-	CreatedBy          string                 `json:"CreatedBy,omitempty"`
-	UpdateDate         int64                  `json:"UpdateDate,omitempty"`
-	UpdatedBy          string                 `json:"UpdatedBy,omitempty"`
-	AdditionalFiles    []string               `json:"AdditionalFiles,omitempty"`
-	AutoUpdate         *StackAutoUpdate       `json:"AutoUpdate,omitempty"`
-	GitConfig          *StackGitConfig        `json:"GitConfig,omitempty"`
-	FromAppTemplate    bool                   `json:"FromAppTemplate,omitempty"`
-	Namespace          string                 `json:"Namespace,omitempty"`
-	IsComposeFormat    bool                   `json:"IsComposeFormat,omitempty"`
+	Id              int              `json:"Id"`
+	Name            string           `json:"Name"`
+	Type            int              `json:"Type"`
+	EndpointId      int              `json:"EndpointId"`
+	SwarmId         string           `json:"SwarmId,omitempty"`
+	EntryPoint      string           `json:"EntryPoint"`
+	Env             []StackEnv       `json:"Env"`
+	ResourceControl *ResourceControl `json:"ResourceControl,omitempty"`
+	Status          int              `json:"Status,omitempty"`
+	ProjectPath     string           `json:"ProjectPath,omitempty"`
+	CreationDate    int64            `json:"CreationDate,omitempty"`
+	CreatedBy       string           `json:"CreatedBy,omitempty"`
+	UpdateDate      int64            `json:"UpdateDate,omitempty"`
+	UpdatedBy       string           `json:"UpdatedBy,omitempty"`
+	AdditionalFiles []string         `json:"AdditionalFiles,omitempty"`
+	AutoUpdate      *StackAutoUpdate `json:"AutoUpdate,omitempty"`
+	GitConfig       *StackGitConfig  `json:"GitConfig,omitempty"`
+	FromAppTemplate bool             `json:"FromAppTemplate,omitempty"`
+	Namespace       string           `json:"Namespace,omitempty"`
+	IsComposeFormat bool             `json:"IsComposeFormat,omitempty"`
 }
 
 type StackEnv struct {
@@ -59,9 +59,9 @@ type StackAutoUpdate struct {
 }
 
 type StackGitConfig struct {
-	URL            string `json:"URL"`
-	ReferenceName  string `json:"ReferenceName"`
-	ConfigFilePath string `json:"ConfigFilePath"`
+	URL            string             `json:"URL"`
+	ReferenceName  string             `json:"ReferenceName"`
+	ConfigFilePath string             `json:"ConfigFilePath"`
 	Authentication *GitAuthentication `json:"Authentication,omitempty"`
 }
 
@@ -95,7 +95,7 @@ func NewStackService(client *Client) *StackService {
 
 func (s *StackService) List(endpointID int) ([]Stack, error) {
 	path := fmt.Sprintf("stacks?filters={\"EndpointId\":%d}", endpointID)
-	
+
 	var stacks []Stack
 	if err := s.client.Get(path, &stacks); err != nil {
 		return nil, fmt.Errorf("failed to list stacks: %w", err)
@@ -105,7 +105,7 @@ func (s *StackService) List(endpointID int) ([]Stack, error) {
 
 func (s *StackService) Get(id int) (*Stack, error) {
 	path := fmt.Sprintf("stacks/%d", id)
-	
+
 	var stack Stack
 	if err := s.client.Get(path, &stack); err != nil {
 		return nil, fmt.Errorf("failed to get stack: %w", err)
@@ -164,7 +164,7 @@ func (s *StackService) Deploy(endpointID int, name, stackFileContent string, env
 	}
 
 	path := fmt.Sprintf("stacks?type=2&method=string&endpointId=%d", endpointID)
-	
+
 	req, err := s.client.newRequest(http.MethodPost, path, nil)
 	if err != nil {
 		return nil, err
@@ -214,7 +214,7 @@ func (s *StackService) Update(stackID, endpointID int, stackFileContent string, 
 	}
 
 	path := fmt.Sprintf("stacks/%d?endpointId=%d", stackID, endpointID)
-	
+
 	req, err := s.client.newRequest(http.MethodPut, path, nil)
 	if err != nil {
 		return err
@@ -234,7 +234,7 @@ func (s *StackService) Update(stackID, endpointID int, stackFileContent string, 
 
 func (s *StackService) Remove(stackID, endpointID int) error {
 	path := fmt.Sprintf("stacks/%d?endpointId=%d", stackID, endpointID)
-	
+
 	if err := s.client.Delete(path); err != nil {
 		return fmt.Errorf("failed to remove stack: %w", err)
 	}
@@ -243,15 +243,15 @@ func (s *StackService) Remove(stackID, endpointID int) error {
 
 func (s *StackService) GetFile(stackID int) (string, error) {
 	path := fmt.Sprintf("stacks/%d/file", stackID)
-	
+
 	var response struct {
 		StackFileContent string `json:"StackFileContent"`
 	}
-	
+
 	if err := s.client.Get(path, &response); err != nil {
 		return "", fmt.Errorf("failed to get stack file: %w", err)
 	}
-	
+
 	return response.StackFileContent, nil
 }
 

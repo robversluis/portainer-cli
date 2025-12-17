@@ -22,7 +22,7 @@ func (s *RegistryService) List() ([]Registry, error) {
 
 func (s *RegistryService) Get(id int) (*Registry, error) {
 	path := fmt.Sprintf("registries/%d", id)
-	
+
 	var registry Registry
 	if err := s.client.Get(path, &registry); err != nil {
 		return nil, fmt.Errorf("failed to get registry: %w", err)
@@ -40,7 +40,7 @@ func (s *RegistryService) Create(registry *Registry) (*Registry, error) {
 
 func (s *RegistryService) Update(id int, registry *Registry) (*Registry, error) {
 	path := fmt.Sprintf("registries/%d", id)
-	
+
 	var result Registry
 	if err := s.client.Put(path, registry, &result); err != nil {
 		return nil, fmt.Errorf("failed to update registry: %w", err)
@@ -50,7 +50,7 @@ func (s *RegistryService) Update(id int, registry *Registry) (*Registry, error) 
 
 func (s *RegistryService) Delete(id int) error {
 	path := fmt.Sprintf("registries/%d", id)
-	
+
 	if err := s.client.Delete(path); err != nil {
 		return fmt.Errorf("failed to delete registry: %w", err)
 	}

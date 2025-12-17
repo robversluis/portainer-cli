@@ -224,7 +224,7 @@ var containersInspectCmd = &cobra.Command{
 			fmt.Printf("Restarting:   %s\n", output.FormatBool(container.State.Restarting))
 			fmt.Printf("Pid:          %d\n", container.State.Pid)
 			fmt.Printf("Exit Code:    %d\n", container.State.ExitCode)
-			
+
 			if container.State.StartedAt != "" {
 				fmt.Printf("Started At:   %s\n", container.State.StartedAt)
 			}

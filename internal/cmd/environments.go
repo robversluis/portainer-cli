@@ -83,9 +83,9 @@ var environmentsGetCmd = &cobra.Command{
 		}
 
 		envService := client.NewEnvironmentService(c)
-		
+
 		var env *client.Environment
-		
+
 		if id, err := strconv.Atoi(args[0]); err == nil {
 			env, err = envService.Get(id)
 			if err != nil {
@@ -132,7 +132,7 @@ var environmentsGetCmd = &cobra.Command{
 			snapshot := env.GetLatestSnapshot()
 			if snapshot != nil {
 				fmt.Printf("\nSnapshot:\n")
-				fmt.Printf("  Containers:  %d running, %d stopped\n", 
+				fmt.Printf("  Containers:  %d running, %d stopped\n",
 					snapshot.RunningContainerCount, snapshot.StoppedContainerCount)
 				if snapshot.HealthyContainerCount > 0 || snapshot.UnhealthyContainerCount > 0 {
 					fmt.Printf("  Health:      %d healthy, %d unhealthy\n",

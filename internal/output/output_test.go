@@ -11,9 +11,9 @@ import (
 
 func TestNewFormatter(t *testing.T) {
 	tests := []struct {
-		name           string
-		format         Format
-		expectedType   string
+		name         string
+		format       Format
+		expectedType string
 	}{
 		{
 			name:         "table format",

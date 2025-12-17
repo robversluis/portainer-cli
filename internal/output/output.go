@@ -91,7 +91,7 @@ func (f *TableFormatter) formatStringSlice(data [][]string) error {
 	}
 
 	table := tablewriter.NewWriter(f.writer)
-	
+
 	if len(data) > 0 {
 		table.SetHeader(data[0])
 		if len(data) > 1 {
@@ -149,11 +149,11 @@ func (f *JSONFormatter) Format(data interface{}) error {
 	encoder := json.NewEncoder(f.writer)
 	encoder.SetIndent("", "  ")
 	encoder.SetEscapeHTML(false)
-	
+
 	if err := encoder.Encode(data); err != nil {
 		return fmt.Errorf("failed to encode JSON: %w", err)
 	}
-	
+
 	return nil
 }
 
@@ -164,11 +164,11 @@ type YAMLFormatter struct {
 func (f *YAMLFormatter) Format(data interface{}) error {
 	encoder := yaml.NewEncoder(f.writer)
 	encoder.SetIndent(2)
-	
+
 	if err := encoder.Encode(data); err != nil {
 		return fmt.Errorf("failed to encode YAML: %w", err)
 	}
-	
+
 	return nil
 }
 

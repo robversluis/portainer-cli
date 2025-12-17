@@ -13,20 +13,20 @@ type ImageService struct {
 }
 
 type Image struct {
-	Id          string            `json:"Id"`
-	RepoTags    []string          `json:"RepoTags"`
-	RepoDigests []string          `json:"RepoDigests"`
-	Parent      string            `json:"Parent"`
-	Comment     string            `json:"Comment"`
-	Created     int64             `json:"Created"`
-	Container   string            `json:"Container"`
-	DockerVersion string          `json:"DockerVersion"`
-	Author      string            `json:"Author"`
-	Architecture string           `json:"Architecture"`
-	Os          string            `json:"Os"`
-	Size        int64             `json:"Size"`
-	VirtualSize int64             `json:"VirtualSize"`
-	Labels      map[string]string `json:"Labels"`
+	Id            string            `json:"Id"`
+	RepoTags      []string          `json:"RepoTags"`
+	RepoDigests   []string          `json:"RepoDigests"`
+	Parent        string            `json:"Parent"`
+	Comment       string            `json:"Comment"`
+	Created       int64             `json:"Created"`
+	Container     string            `json:"Container"`
+	DockerVersion string            `json:"DockerVersion"`
+	Author        string            `json:"Author"`
+	Architecture  string            `json:"Architecture"`
+	Os            string            `json:"Os"`
+	Size          int64             `json:"Size"`
+	VirtualSize   int64             `json:"VirtualSize"`
+	Labels        map[string]string `json:"Labels"`
 }
 
 type ImageDetails struct {
@@ -66,17 +66,17 @@ type ImagePullRequest struct {
 }
 
 type Registry struct {
-	Id                      int                  `json:"Id"`
-	Type                    int                  `json:"Type"`
-	Name                    string               `json:"Name"`
-	URL                     string               `json:"URL"`
-	Authentication          bool                 `json:"Authentication"`
-	Username                string               `json:"Username"`
-	Password                string               `json:"Password,omitempty"`
-	RegistryAccesses        *RegistryAccesses    `json:"RegistryAccesses,omitempty"`
-	Gitlab                  *GitlabRegistryData  `json:"Gitlab,omitempty"`
-	Quay                    *QuayRegistryData    `json:"Quay,omitempty"`
-	ManagementConfiguration *ManagementConfig    `json:"ManagementConfiguration,omitempty"`
+	Id                      int                 `json:"Id"`
+	Type                    int                 `json:"Type"`
+	Name                    string              `json:"Name"`
+	URL                     string              `json:"URL"`
+	Authentication          bool                `json:"Authentication"`
+	Username                string              `json:"Username"`
+	Password                string              `json:"Password,omitempty"`
+	RegistryAccesses        *RegistryAccesses   `json:"RegistryAccesses,omitempty"`
+	Gitlab                  *GitlabRegistryData `json:"Gitlab,omitempty"`
+	Quay                    *QuayRegistryData   `json:"Quay,omitempty"`
+	ManagementConfiguration *ManagementConfig   `json:"ManagementConfiguration,omitempty"`
 }
 
 type RegistryAccesses struct {
@@ -101,21 +101,21 @@ type QuayRegistryData struct {
 }
 
 type ManagementConfig struct {
-	Type           int    `json:"Type"`
-	Authentication bool   `json:"Authentication"`
-	Username       string `json:"Username"`
-	Password       string `json:"Password,omitempty"`
+	Type           int              `json:"Type"`
+	Authentication bool             `json:"Authentication"`
+	Username       string           `json:"Username"`
+	Password       string           `json:"Password,omitempty"`
 	TLSConfig      TLSConfiguration `json:"TLSConfig"`
 }
 
 const (
-	RegistryTypeQuay           = 1
-	RegistryTypeAzure          = 2
-	RegistryTypeCustom         = 3
-	RegistryTypeGitlab         = 4
-	RegistryTypeProGet         = 5
-	RegistryTypeDockerHub      = 6
-	RegistryTypeECR            = 7
+	RegistryTypeQuay      = 1
+	RegistryTypeAzure     = 2
+	RegistryTypeCustom    = 3
+	RegistryTypeGitlab    = 4
+	RegistryTypeProGet    = 5
+	RegistryTypeDockerHub = 6
+	RegistryTypeECR       = 7
 )
 
 func NewImageService(client *Client) *ImageService {
@@ -124,7 +124,7 @@ func NewImageService(client *Client) *ImageService {
 
 func (s *ImageService) List(endpointID int) ([]Image, error) {
 	path := fmt.Sprintf("endpoints/%d/docker/images/json", endpointID)
-	
+
 	var images []Image
 	if err := s.client.Get(path, &images); err != nil {
 		return nil, fmt.Errorf("failed to list images: %w", err)
@@ -134,7 +134,7 @@ func (s *ImageService) List(endpointID int) ([]Image, error) {
 
 func (s *ImageService) Inspect(endpointID int, imageID string) (*ImageDetails, error) {
 	path := fmt.Sprintf("endpoints/%d/docker/images/%s/json", endpointID, url.PathEscape(imageID))
-	
+
 	var image ImageDetails
 	if err := s.client.Get(path, &image); err != nil {
 		return nil, fmt.Errorf("failed to inspect image: %w", err)
@@ -144,7 +144,7 @@ func (s *ImageService) Inspect(endpointID int, imageID string) (*ImageDetails, e
 
 func (s *ImageService) Pull(endpointID int, imageName string, registryID int) error {
 	path := fmt.Sprintf("endpoints/%d/docker/images/create?fromImage=%s", endpointID, url.QueryEscape(imageName))
-	
+
 	if registryID > 0 {
 		path += fmt.Sprintf("&X-Registry-Auth=%d", registryID)
 	}
@@ -165,7 +165,7 @@ func (s *ImageService) Pull(endpointID int, imageName string, registryID int) er
 
 func (s *ImageService) Remove(endpointID int, imageID string, force bool) error {
 	path := fmt.Sprintf("endpoints/%d/docker/images/%s?force=%t", endpointID, url.PathEscape(imageID), force)
-	
+
 	if err := s.client.Delete(path); err != nil {
 		return fmt.Errorf("failed to remove image: %w", err)
 	}
@@ -175,7 +175,7 @@ func (s *ImageService) Remove(endpointID int, imageID string, force bool) error 
 func (s *ImageService) Tag(endpointID int, imageID, repo, tag string) error {
 	path := fmt.Sprintf("endpoints/%d/docker/images/%s/tag?repo=%s&tag=%s",
 		endpointID, url.PathEscape(imageID), url.QueryEscape(repo), url.QueryEscape(tag))
-	
+
 	req, err := s.client.newRequest(http.MethodPost, path, nil)
 	if err != nil {
 		return err
@@ -192,7 +192,7 @@ func (s *ImageService) Tag(endpointID int, imageID, repo, tag string) error {
 
 func (s *ImageService) Push(endpointID int, imageName string, registryID int) error {
 	path := fmt.Sprintf("endpoints/%d/docker/images/%s/push", endpointID, url.PathEscape(imageName))
-	
+
 	if registryID > 0 {
 		path += fmt.Sprintf("?X-Registry-Auth=%d", registryID)
 	}
@@ -223,7 +223,7 @@ func (s *ImageService) Prune(endpointID int, dangling bool) error {
 	}
 
 	path := fmt.Sprintf("endpoints/%d/docker/images/prune?filters=%s", endpointID, url.QueryEscape(string(filtersJSON)))
-	
+
 	req, err := s.client.newRequest(http.MethodPost, path, nil)
 	if err != nil {
 		return err

@@ -294,39 +294,39 @@ func TestAPIError(t *testing.T) {
 
 func TestErrorCheckers(t *testing.T) {
 	tests := []struct {
-		name     string
-		err      error
-		is404    bool
-		is401    bool
-		is403    bool
+		name  string
+		err   error
+		is404 bool
+		is401 bool
+		is403 bool
 	}{
 		{
-			name:     "404 error",
-			err:      &APIError{StatusCode: 404, Message: "Not Found"},
-			is404:    true,
-			is401:    false,
-			is403:    false,
+			name:  "404 error",
+			err:   &APIError{StatusCode: 404, Message: "Not Found"},
+			is404: true,
+			is401: false,
+			is403: false,
 		},
 		{
-			name:     "401 error",
-			err:      &APIError{StatusCode: 401, Message: "Unauthorized"},
-			is404:    false,
-			is401:    true,
-			is403:    false,
+			name:  "401 error",
+			err:   &APIError{StatusCode: 401, Message: "Unauthorized"},
+			is404: false,
+			is401: true,
+			is403: false,
 		},
 		{
-			name:     "403 error",
-			err:      &APIError{StatusCode: 403, Message: "Forbidden"},
-			is404:    false,
-			is401:    false,
-			is403:    true,
+			name:  "403 error",
+			err:   &APIError{StatusCode: 403, Message: "Forbidden"},
+			is404: false,
+			is401: false,
+			is403: true,
 		},
 		{
-			name:     "non-API error",
-			err:      http.ErrServerClosed,
-			is404:    false,
-			is401:    false,
-			is403:    false,
+			name:  "non-API error",
+			err:   http.ErrServerClosed,
+			is404: false,
+			is401: false,
+			is403: false,
 		},
 	}
 

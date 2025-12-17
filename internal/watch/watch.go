@@ -57,14 +57,14 @@ func Watch(ctx context.Context, opts Options, fn func() error) error {
 // clearScreen clears the terminal screen
 func clearScreen() {
 	var cmd *exec.Cmd
-	
+
 	switch runtime.GOOS {
 	case "windows":
 		cmd = exec.Command("cmd", "/c", "cls")
 	default:
 		cmd = exec.Command("clear")
 	}
-	
+
 	cmd.Stdout = os.Stdout
 	if err := cmd.Run(); err != nil {
 		// Silently ignore errors - clearing screen is not critical

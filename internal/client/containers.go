@@ -31,26 +31,26 @@ type Container struct {
 }
 
 type ContainerDetails struct {
-	Id              string                 `json:"Id"`
-	Created         string                 `json:"Created"`
-	Path            string                 `json:"Path"`
-	Args            []string               `json:"Args"`
-	State           ContainerState         `json:"State"`
-	Image           string                 `json:"Image"`
-	ResolvConfPath  string                 `json:"ResolvConfPath"`
-	HostnamePath    string                 `json:"HostnamePath"`
-	HostsPath       string                 `json:"HostsPath"`
-	LogPath         string                 `json:"LogPath"`
-	Name            string                 `json:"Name"`
-	RestartCount    int                    `json:"RestartCount"`
-	Driver          string                 `json:"Driver"`
-	Platform        string                 `json:"Platform"`
-	MountLabel      string                 `json:"MountLabel"`
-	ProcessLabel    string                 `json:"ProcessLabel"`
-	AppArmorProfile string                 `json:"AppArmorProfile"`
-	Config          ContainerConfig        `json:"Config"`
+	Id              string                   `json:"Id"`
+	Created         string                   `json:"Created"`
+	Path            string                   `json:"Path"`
+	Args            []string                 `json:"Args"`
+	State           ContainerState           `json:"State"`
+	Image           string                   `json:"Image"`
+	ResolvConfPath  string                   `json:"ResolvConfPath"`
+	HostnamePath    string                   `json:"HostnamePath"`
+	HostsPath       string                   `json:"HostsPath"`
+	LogPath         string                   `json:"LogPath"`
+	Name            string                   `json:"Name"`
+	RestartCount    int                      `json:"RestartCount"`
+	Driver          string                   `json:"Driver"`
+	Platform        string                   `json:"Platform"`
+	MountLabel      string                   `json:"MountLabel"`
+	ProcessLabel    string                   `json:"ProcessLabel"`
+	AppArmorProfile string                   `json:"AppArmorProfile"`
+	Config          ContainerConfig          `json:"Config"`
 	NetworkSettings ContainerNetworkSettings `json:"NetworkSettings"`
-	Mounts          []Mount                `json:"Mounts"`
+	Mounts          []Mount                  `json:"Mounts"`
 }
 
 type ContainerState struct {
@@ -68,43 +68,43 @@ type ContainerState struct {
 }
 
 type ContainerConfig struct {
-	Hostname     string            `json:"Hostname"`
-	Domainname   string            `json:"Domainname"`
-	User         string            `json:"User"`
-	AttachStdin  bool              `json:"AttachStdin"`
-	AttachStdout bool              `json:"AttachStdout"`
-	AttachStderr bool              `json:"AttachStderr"`
-	Tty          bool              `json:"Tty"`
-	OpenStdin    bool              `json:"OpenStdin"`
-	StdinOnce    bool              `json:"StdinOnce"`
-	Env          []string          `json:"Env"`
-	Cmd          []string          `json:"Cmd"`
-	Image        string            `json:"Image"`
+	Hostname     string              `json:"Hostname"`
+	Domainname   string              `json:"Domainname"`
+	User         string              `json:"User"`
+	AttachStdin  bool                `json:"AttachStdin"`
+	AttachStdout bool                `json:"AttachStdout"`
+	AttachStderr bool                `json:"AttachStderr"`
+	Tty          bool                `json:"Tty"`
+	OpenStdin    bool                `json:"OpenStdin"`
+	StdinOnce    bool                `json:"StdinOnce"`
+	Env          []string            `json:"Env"`
+	Cmd          []string            `json:"Cmd"`
+	Image        string              `json:"Image"`
 	Volumes      map[string]struct{} `json:"Volumes"`
-	WorkingDir   string            `json:"WorkingDir"`
-	Entrypoint   []string          `json:"Entrypoint"`
-	Labels       map[string]string `json:"Labels"`
+	WorkingDir   string              `json:"WorkingDir"`
+	Entrypoint   []string            `json:"Entrypoint"`
+	Labels       map[string]string   `json:"Labels"`
 }
 
 type ContainerNetworkSettings struct {
-	Bridge                 string                       `json:"Bridge"`
-	SandboxID              string                       `json:"SandboxID"`
-	HairpinMode            bool                         `json:"HairpinMode"`
-	LinkLocalIPv6Address   string                       `json:"LinkLocalIPv6Address"`
-	LinkLocalIPv6PrefixLen int                          `json:"LinkLocalIPv6PrefixLen"`
-	Ports                  map[string][]PortBinding     `json:"Ports"`
-	SandboxKey             string                       `json:"SandboxKey"`
-	SecondaryIPAddresses   []string                     `json:"SecondaryIPAddresses"`
-	SecondaryIPv6Addresses []string                     `json:"SecondaryIPv6Addresses"`
-	EndpointID             string                       `json:"EndpointID"`
-	Gateway                string                       `json:"Gateway"`
-	GlobalIPv6Address      string                       `json:"GlobalIPv6Address"`
-	GlobalIPv6PrefixLen    int                          `json:"GlobalIPv6PrefixLen"`
-	IPAddress              string                       `json:"IPAddress"`
-	IPPrefixLen            int                          `json:"IPPrefixLen"`
-	IPv6Gateway            string                       `json:"IPv6Gateway"`
-	MacAddress             string                       `json:"MacAddress"`
-	Networks               map[string]EndpointSettings  `json:"Networks"`
+	Bridge                 string                      `json:"Bridge"`
+	SandboxID              string                      `json:"SandboxID"`
+	HairpinMode            bool                        `json:"HairpinMode"`
+	LinkLocalIPv6Address   string                      `json:"LinkLocalIPv6Address"`
+	LinkLocalIPv6PrefixLen int                         `json:"LinkLocalIPv6PrefixLen"`
+	Ports                  map[string][]PortBinding    `json:"Ports"`
+	SandboxKey             string                      `json:"SandboxKey"`
+	SecondaryIPAddresses   []string                    `json:"SecondaryIPAddresses"`
+	SecondaryIPv6Addresses []string                    `json:"SecondaryIPv6Addresses"`
+	EndpointID             string                      `json:"EndpointID"`
+	Gateway                string                      `json:"Gateway"`
+	GlobalIPv6Address      string                      `json:"GlobalIPv6Address"`
+	GlobalIPv6PrefixLen    int                         `json:"GlobalIPv6PrefixLen"`
+	IPAddress              string                      `json:"IPAddress"`
+	IPPrefixLen            int                         `json:"IPPrefixLen"`
+	IPv6Gateway            string                      `json:"IPv6Gateway"`
+	MacAddress             string                      `json:"MacAddress"`
+	Networks               map[string]EndpointSettings `json:"Networks"`
 }
 
 type Port struct {

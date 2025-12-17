@@ -100,7 +100,7 @@ var registriesGetCmd = &cobra.Command{
 			fmt.Printf("Type:           %s\n", registry.TypeString())
 			fmt.Printf("URL:            %s\n", registry.URL)
 			fmt.Printf("Authentication: %s\n", output.FormatBool(registry.Authentication))
-			
+
 			if registry.Authentication {
 				fmt.Printf("Username:       %s\n", registry.Username)
 			}

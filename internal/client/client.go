@@ -15,10 +15,10 @@ import (
 )
 
 const (
-	defaultTimeout     = 30 * time.Second
-	defaultMaxRetries  = 3
-	defaultRetryDelay  = 1 * time.Second
-	userAgent          = "portainer-cli"
+	defaultTimeout    = 30 * time.Second
+	defaultMaxRetries = 3
+	defaultRetryDelay = 1 * time.Second
+	userAgent         = "portainer-cli"
 )
 
 type Client struct {

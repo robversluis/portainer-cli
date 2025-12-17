@@ -55,7 +55,7 @@ func NewVolumeService(client *Client) *VolumeService {
 
 func (s *VolumeService) List(endpointID int) ([]Volume, error) {
 	path := fmt.Sprintf("endpoints/%d/docker/volumes", endpointID)
-	
+
 	var response VolumeListResponse
 	if err := s.client.Get(path, &response); err != nil {
 		return nil, fmt.Errorf("failed to list volumes: %w", err)
@@ -65,7 +65,7 @@ func (s *VolumeService) List(endpointID int) ([]Volume, error) {
 
 func (s *VolumeService) Inspect(endpointID int, volumeName string) (*VolumeDetails, error) {
 	path := fmt.Sprintf("endpoints/%d/docker/volumes/%s", endpointID, url.PathEscape(volumeName))
-	
+
 	var volume VolumeDetails
 	if err := s.client.Get(path, &volume); err != nil {
 		return nil, fmt.Errorf("failed to inspect volume: %w", err)
@@ -75,7 +75,7 @@ func (s *VolumeService) Inspect(endpointID int, volumeName string) (*VolumeDetai
 
 func (s *VolumeService) Create(endpointID int, req *VolumeCreateRequest) (*Volume, error) {
 	path := fmt.Sprintf("endpoints/%d/docker/volumes/create", endpointID)
-	
+
 	var volume Volume
 	if err := s.client.Post(path, req, &volume); err != nil {
 		return nil, fmt.Errorf("failed to create volume: %w", err)
@@ -85,7 +85,7 @@ func (s *VolumeService) Create(endpointID int, req *VolumeCreateRequest) (*Volum
 
 func (s *VolumeService) Remove(endpointID int, volumeName string, force bool) error {
 	path := fmt.Sprintf("endpoints/%d/docker/volumes/%s?force=%t", endpointID, url.PathEscape(volumeName), force)
-	
+
 	if err := s.client.Delete(path); err != nil {
 		return fmt.Errorf("failed to remove volume: %w", err)
 	}
@@ -94,7 +94,7 @@ func (s *VolumeService) Remove(endpointID int, volumeName string, force bool) er
 
 func (s *VolumeService) Prune(endpointID int) error {
 	path := fmt.Sprintf("endpoints/%d/docker/volumes/prune", endpointID)
-	
+
 	if err := s.client.Post(path, nil, nil); err != nil {
 		return fmt.Errorf("failed to prune volumes: %w", err)
 	}

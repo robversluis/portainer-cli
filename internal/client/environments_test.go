@@ -71,11 +71,11 @@ func TestEnvironmentService_Get(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/api/endpoints/1" {
 			env := Environment{
-				Id:     1,
-				Name:   "local",
-				Type:   EnvironmentTypeDockerLocal,
-				URL:    "unix:///var/run/docker.sock",
-				Status: EnvironmentStatusUp,
+				Id:      1,
+				Name:    "local",
+				Type:    EnvironmentTypeDockerLocal,
+				URL:     "unix:///var/run/docker.sock",
+				Status:  EnvironmentStatusUp,
 				GroupId: 1,
 			}
 			w.WriteHeader(http.StatusOK)

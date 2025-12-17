@@ -159,7 +159,7 @@ var imagesInspectCmd = &cobra.Command{
 			fmt.Printf("Virtual Size: %s\n", output.FormatSize(image.VirtualSize))
 			fmt.Printf("Architecture: %s\n", image.Architecture)
 			fmt.Printf("OS:           %s\n", image.Os)
-			
+
 			if image.Author != "" {
 				fmt.Printf("Author:       %s\n", image.Author)
 			}
@@ -362,7 +362,7 @@ var imagesTagCmd = &cobra.Command{
 
 func splitImageName(imageName string) [2]string {
 	parts := [2]string{"", "latest"}
-	
+
 	lastColon := -1
 	for i := len(imageName) - 1; i >= 0; i-- {
 		if imageName[i] == ':' {
@@ -373,14 +373,14 @@ func splitImageName(imageName string) [2]string {
 			break
 		}
 	}
-	
+
 	if lastColon > 0 {
 		parts[0] = imageName[:lastColon]
 		parts[1] = imageName[lastColon+1:]
 	} else {
 		parts[0] = imageName
 	}
-	
+
 	return parts
 }
 

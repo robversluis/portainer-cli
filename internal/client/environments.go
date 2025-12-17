@@ -10,25 +10,25 @@ type EnvironmentService struct {
 }
 
 type Environment struct {
-	Id                   int                  `json:"Id"`
-	Name                 string               `json:"Name"`
-	Type                 int                  `json:"Type"`
-	URL                  string               `json:"URL"`
-	PublicURL            string               `json:"PublicURL,omitempty"`
-	GroupId              int                  `json:"GroupId"`
-	Status               int                  `json:"Status"`
-	Snapshots            []Snapshot           `json:"Snapshots,omitempty"`
-	UserAccessPolicies   map[string]int       `json:"UserAccessPolicies,omitempty"`
-	TeamAccessPolicies   map[string]int       `json:"TeamAccessPolicies,omitempty"`
-	EdgeID               string               `json:"EdgeID,omitempty"`
-	EdgeKey              string               `json:"EdgeKey,omitempty"`
-	EdgeCheckinInterval  int                  `json:"EdgeCheckinInterval,omitempty"`
-	TagIds               []int                `json:"TagIds,omitempty"`
-	TLSConfig            TLSConfiguration     `json:"TLSConfig,omitempty"`
-	AzureCredentials     AzureCredentials     `json:"AzureCredentials,omitempty"`
-	KubernetesConfig     KubernetesConfig     `json:"Kubernetes,omitempty"`
-	Agent                AgentInfo            `json:"Agent,omitempty"`
-	SecuritySettings     SecuritySettings     `json:"SecuritySettings,omitempty"`
+	Id                  int              `json:"Id"`
+	Name                string           `json:"Name"`
+	Type                int              `json:"Type"`
+	URL                 string           `json:"URL"`
+	PublicURL           string           `json:"PublicURL,omitempty"`
+	GroupId             int              `json:"GroupId"`
+	Status              int              `json:"Status"`
+	Snapshots           []Snapshot       `json:"Snapshots,omitempty"`
+	UserAccessPolicies  map[string]int   `json:"UserAccessPolicies,omitempty"`
+	TeamAccessPolicies  map[string]int   `json:"TeamAccessPolicies,omitempty"`
+	EdgeID              string           `json:"EdgeID,omitempty"`
+	EdgeKey             string           `json:"EdgeKey,omitempty"`
+	EdgeCheckinInterval int              `json:"EdgeCheckinInterval,omitempty"`
+	TagIds              []int            `json:"TagIds,omitempty"`
+	TLSConfig           TLSConfiguration `json:"TLSConfig,omitempty"`
+	AzureCredentials    AzureCredentials `json:"AzureCredentials,omitempty"`
+	KubernetesConfig    KubernetesConfig `json:"Kubernetes,omitempty"`
+	Agent               AgentInfo        `json:"Agent,omitempty"`
+	SecuritySettings    SecuritySettings `json:"SecuritySettings,omitempty"`
 }
 
 type Snapshot struct {
@@ -67,10 +67,10 @@ type KubernetesConfig struct {
 }
 
 type KubeConfiguration struct {
-	UseLoadBalancer       bool   `json:"UseLoadBalancer"`
-	UseServerMetrics      bool   `json:"UseServerMetrics"`
-	StorageClasses        []string `json:"StorageClasses,omitempty"`
-	IngressClasses        []string `json:"IngressClasses,omitempty"`
+	UseLoadBalancer  bool     `json:"UseLoadBalancer"`
+	UseServerMetrics bool     `json:"UseServerMetrics"`
+	StorageClasses   []string `json:"StorageClasses,omitempty"`
+	IngressClasses   []string `json:"IngressClasses,omitempty"`
 }
 
 type AgentInfo struct {
@@ -83,13 +83,13 @@ type SecuritySettings struct {
 }
 
 const (
-	EnvironmentTypeDockerLocal      = 1
-	EnvironmentTypeAgentOnDocker    = 2
-	EnvironmentTypeAzure            = 3
-	EnvironmentTypeAgentOnKubernetes = 4
-	EnvironmentTypeEdgeAgentOnDocker = 5
+	EnvironmentTypeDockerLocal           = 1
+	EnvironmentTypeAgentOnDocker         = 2
+	EnvironmentTypeAzure                 = 3
+	EnvironmentTypeAgentOnKubernetes     = 4
+	EnvironmentTypeEdgeAgentOnDocker     = 5
 	EnvironmentTypeEdgeAgentOnKubernetes = 6
-	EnvironmentTypeKubeLocal        = 7
+	EnvironmentTypeKubeLocal             = 7
 )
 
 const (
@@ -177,7 +177,7 @@ func (env *Environment) GetLatestSnapshot() *Snapshot {
 	if len(env.Snapshots) == 0 {
 		return nil
 	}
-	
+
 	latest := &env.Snapshots[0]
 	for i := range env.Snapshots {
 		if env.Snapshots[i].Time > latest.Time {

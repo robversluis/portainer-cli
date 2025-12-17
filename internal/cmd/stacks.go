@@ -197,7 +197,7 @@ var stacksGetCmd = &cobra.Command{
 		}
 
 		stackService := client.NewStackService(c)
-		
+
 		var stack *client.Stack
 		var stackID int
 		if _, err := fmt.Sscanf(args[0], "%d", &stackID); err == nil {
@@ -228,11 +228,11 @@ var stacksGetCmd = &cobra.Command{
 			fmt.Printf("Type:        %s\n", stack.TypeString())
 			fmt.Printf("Status:      %s\n", stack.StatusString())
 			fmt.Printf("Endpoint ID: %d\n", stack.EndpointId)
-			
+
 			if stack.EntryPoint != "" {
 				fmt.Printf("Entry Point: %s\n", stack.EntryPoint)
 			}
-			
+
 			if len(stack.Env) > 0 {
 				fmt.Printf("\nEnvironment Variables:\n")
 				for _, env := range stack.Env {
@@ -271,7 +271,7 @@ var stacksRemoveCmd = &cobra.Command{
 		}
 
 		stackService := client.NewStackService(c)
-		
+
 		var stackID int
 		if _, err := fmt.Sscanf(args[0], "%d", &stackID); err == nil {
 			if err := stackService.Remove(stackID, endpointID); err != nil {
@@ -338,7 +338,7 @@ var stacksUpdateCmd = &cobra.Command{
 		}
 
 		stackService := client.NewStackService(c)
-		
+
 		content, err := client.ParseStackFile(stackFile)
 		if err != nil {
 			return err
