@@ -50,7 +50,6 @@ archives:
         format: zip
     files:
       - README.md
-      - LICENSE
       - CHANGELOG.md
       - docs/**/*
 
