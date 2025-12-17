@@ -192,36 +192,22 @@ func (s *StackService) Deploy(endpointID int, name, stackFileContent string, env
 }
 
 func (s *StackService) Update(stackID, endpointID int, stackFileContent string, env []StackEnv) error {
-	body := &bytes.Buffer{}
-	writer := multipart.NewWriter(body)
-
-	if err := writer.WriteField("StackFileContent", stackFileContent); err != nil {
-		return fmt.Errorf("failed to write stack file content: %w", err)
+	type updatePayload struct {
+		StackFileContent string     `json:"stackFileContent"`
+		Env              []StackEnv `json:"env,omitempty"`
 	}
 
-	if len(env) > 0 {
-		envJSON, err := json.Marshal(env)
-		if err != nil {
-			return fmt.Errorf("failed to marshal env: %w", err)
-		}
-		if err := writer.WriteField("Env", string(envJSON)); err != nil {
-			return fmt.Errorf("failed to write env field: %w", err)
-		}
-	}
-
-	if err := writer.Close(); err != nil {
-		return fmt.Errorf("failed to close multipart writer: %w", err)
+	payload := updatePayload{
+		StackFileContent: stackFileContent,
+		Env:              env,
 	}
 
 	path := fmt.Sprintf("stacks/%d?endpointId=%d", stackID, endpointID)
 
-	req, err := s.client.newRequest(http.MethodPut, path, nil)
+	req, err := s.client.newRequest(http.MethodPut, path, payload)
 	if err != nil {
 		return err
 	}
-
-	req.Header.Set("Content-Type", writer.FormDataContentType())
-	req.Body = io.NopCloser(body)
 
 	resp, err := s.client.do(req)
 	if err != nil {
