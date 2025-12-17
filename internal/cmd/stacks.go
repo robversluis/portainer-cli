@@ -257,11 +257,77 @@ var stacksRemoveCmd = &cobra.Command{
 	},
 }
 
+var stacksUpdateCmd = &cobra.Command{
+	Use:   "update [stack-id]",
+	Short: "Update a stack",
+	Long:  `Update an existing stack with a new compose file.`,
+	Args:  cobra.ExactArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		var stackID int
+		if _, err := fmt.Sscanf(args[0], "%d", &stackID); err != nil {
+			return fmt.Errorf("invalid stack ID: %s", args[0])
+		}
+
+		stackFile, err := cmd.Flags().GetString("file")
+		if err != nil {
+			return err
+		}
+		if stackFile == "" {
+			return fmt.Errorf("--file flag is required")
+		}
+
+		envVars, err := cmd.Flags().GetStringArray("env")
+		if err != nil {
+			return err
+		}
+
+		profile, err := config.GetProfileFromViper()
+		if err != nil {
+			return fmt.Errorf("failed to get profile: %w", err)
+		}
+
+		c, err := client.NewClient(profile, client.WithVerbose(GetVerbose()))
+		if err != nil {
+			return fmt.Errorf("failed to create client: %w", err)
+		}
+
+		stackService := client.NewStackService(c)
+		
+		content, err := client.ParseStackFile(stackFile)
+		if err != nil {
+			return err
+		}
+
+		var env []client.StackEnv
+		for _, envVar := range envVars {
+			parts := strings.SplitN(envVar, "=", 2)
+			if len(parts) != 2 {
+				return fmt.Errorf("invalid env format: %s (expected KEY=VALUE)", envVar)
+			}
+			env = append(env, client.StackEnv{
+				Name:  parts[0],
+				Value: parts[1],
+			})
+		}
+
+		if err := stackService.Update(stackID, content, env); err != nil {
+			return err
+		}
+
+		if !GetQuiet() {
+			fmt.Printf("Stack %d updated successfully\n", stackID)
+		}
+
+		return nil
+	},
+}
+
 func init() {
 	rootCmd.AddCommand(stacksCmd)
 	stacksCmd.AddCommand(stacksListCmd)
 	stacksCmd.AddCommand(stacksDeployCmd)
 	stacksCmd.AddCommand(stacksGetCmd)
+	stacksCmd.AddCommand(stacksUpdateCmd)
 	stacksCmd.AddCommand(stacksRemoveCmd)
 
 	stacksListCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
@@ -279,4 +345,8 @@ func init() {
 
 	stacksRemoveCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
 	stacksRemoveCmd.MarkFlagRequired("endpoint")
+
+	stacksUpdateCmd.Flags().String("file", "", "Path to stack file (required)")
+	stacksUpdateCmd.Flags().StringArray("env", []string{}, "Environment variables (KEY=VALUE)")
+	stacksUpdateCmd.MarkFlagRequired("file")
 }
