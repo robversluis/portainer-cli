@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/rob/portainer-cli/internal/config"
+	"github.com/robversluis/portainer-cli/internal/config"
 )
 
 const (

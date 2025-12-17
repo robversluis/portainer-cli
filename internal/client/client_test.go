@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/rob/portainer-cli/internal/config"
+	"github.com/robversluis/portainer-cli/internal/config"
 )
 
 func TestNewClient(t *testing.T) {

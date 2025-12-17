@@ -3,9 +3,9 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/rob/portainer-cli/internal/client"
-	"github.com/rob/portainer-cli/internal/config"
-	"github.com/rob/portainer-cli/internal/output"
+	"github.com/robversluis/portainer-cli/internal/client"
+	"github.com/robversluis/portainer-cli/internal/config"
+	"github.com/robversluis/portainer-cli/internal/output"
 	"github.com/spf13/cobra"
 )
 

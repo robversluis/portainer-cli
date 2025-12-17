@@ -6,7 +6,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/rob/portainer-cli/internal/config"
+	"github.com/robversluis/portainer-cli/internal/config"
 )
 
 func TestEnvironmentService_List(t *testing.T) {

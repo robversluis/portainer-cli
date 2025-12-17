@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/rob/portainer-cli/internal/config"
+	"github.com/robversluis/portainer-cli/internal/config"
 )
 
 type AuthService struct {

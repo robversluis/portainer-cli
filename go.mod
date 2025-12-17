@@ -1,4 +1,4 @@
-module github.com/rob/portainer-cli
+module github.com/robversluis/portainer-cli
 
 go 1.24.0
 

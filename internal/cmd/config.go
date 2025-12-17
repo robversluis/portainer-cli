@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/olekukonko/tablewriter"
-	"github.com/rob/portainer-cli/internal/config"
+	"github.com/robversluis/portainer-cli/internal/config"
 	"github.com/spf13/cobra"
 )
 
