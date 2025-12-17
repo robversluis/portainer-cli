@@ -414,5 +414,5 @@ func init() {
 	_ = imagesPruneCmd.MarkFlagRequired("endpoint")
 
 	imagesTagCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
-	imagesTagCmd.MarkFlagRequired("endpoint")
+	_ = imagesTagCmd.MarkFlagRequired("endpoint")
 }
