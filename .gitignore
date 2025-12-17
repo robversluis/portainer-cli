@@ -21,7 +21,7 @@ vendor/
 dist/
 build/
 bin/
-portainer-cli
+/portainer-cli
 
 # IDE and editor files
 .vscode/
