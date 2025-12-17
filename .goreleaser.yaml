@@ -160,37 +160,22 @@ nfpms:
       - apk
     bindir: /usr/bin
 
-dockers:
-  - image_templates:
-      - "ghcr.io/robversluis/portainer-cli:{{ .Version }}-amd64"
-      - "ghcr.io/robversluis/portainer-cli:latest-amd64"
-    use: buildx
-    dockerfile: Dockerfile
-    build_flag_templates:
-      - "--platform=linux/amd64"
-      - "--label=org.opencontainers.image.created={{.Date}}"
-      - "--label=org.opencontainers.image.title={{.ProjectName}}"
-      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
-      - "--label=org.opencontainers.image.version={{.Version}}"
-  - image_templates:
-      - "ghcr.io/robversluis/portainer-cli:{{ .Version }}-arm64"
-      - "ghcr.io/robversluis/portainer-cli:latest-arm64"
-    use: buildx
-    dockerfile: Dockerfile
-    build_flag_templates:
-      - "--platform=linux/arm64"
-      - "--label=org.opencontainers.image.created={{.Date}}"
-      - "--label=org.opencontainers.image.title={{.ProjectName}}"
-      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
-      - "--label=org.opencontainers.image.version={{.Version}}"
-    goarch: arm64
+# Docker builds disabled for now
+# dockers:
+#   - image_templates:
+#       - "ghcr.io/robversluis/portainer-cli:{{ .Version }}-amd64"
+#   - image_templates:
+#       - "ghcr.io/robversluis/portainer-cli:{{ .Version }}-arm64"
+#     use: buildx
+#     dockerfile: Dockerfile
+#     build_flag_templates:
+#       - "--platform=linux/arm64"
+#       - "--label=org.opencontainers.image.created={{.Date}}"
+#       - "--label=org.opencontainers.image.title={{.ProjectName}}"
+#       - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+#       - "--label=org.opencontainers.image.version={{.Version}}"
+#     goarch: arm64
 
-docker_manifests:
-  - name_template: "ghcr.io/robversluis/portainer-cli:{{ .Version }}"
-    image_templates:
-      - "ghcr.io/robversluis/portainer-cli:{{ .Version }}-amd64"
-      - "ghcr.io/robversluis/portainer-cli:{{ .Version }}-arm64"
-  - name_template: "ghcr.io/robversluis/portainer-cli:latest"
-    image_templates:
-      - "ghcr.io/robversluis/portainer-cli:latest-amd64"
-      - "ghcr.io/robversluis/portainer-cli:latest-arm64"
+# Docker manifests disabled (docker builds are disabled)
+# docker_manifests:
+#   - name_template: "ghcr.io/robversluis/portainer-cli:{{ .Version }}"
