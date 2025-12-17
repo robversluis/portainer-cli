@@ -433,26 +433,26 @@ func init() {
 	containersListCmd.Flags().BoolP("all", "a", false, "Show all containers (default shows just running)")
 	containersListCmd.Flags().BoolP("watch", "w", false, "Watch for changes and continuously update")
 	containersListCmd.Flags().Int("interval", 2, "Refresh interval in seconds for watch mode")
-	containersListCmd.MarkFlagRequired("endpoint")
+	_ = containersListCmd.MarkFlagRequired("endpoint")
 
 	containersLogsCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
 	containersLogsCmd.Flags().BoolP("follow", "f", false, "Follow log output")
 	containersLogsCmd.Flags().IntP("tail", "n", 100, "Number of lines to show from the end")
-	containersLogsCmd.MarkFlagRequired("endpoint")
+	_ = containersLogsCmd.MarkFlagRequired("endpoint")
 
 	containersInspectCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
-	containersInspectCmd.MarkFlagRequired("endpoint")
+	_ = containersInspectCmd.MarkFlagRequired("endpoint")
 
 	containersStartCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
-	containersStartCmd.MarkFlagRequired("endpoint")
+	_ = containersStartCmd.MarkFlagRequired("endpoint")
 
 	containersStopCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
-	containersStopCmd.MarkFlagRequired("endpoint")
+	_ = containersStopCmd.MarkFlagRequired("endpoint")
 
 	containersRestartCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
-	containersRestartCmd.MarkFlagRequired("endpoint")
+	_ = containersRestartCmd.MarkFlagRequired("endpoint")
 
 	containersRemoveCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
-	containersRemoveCmd.Flags().BoolP("force", "f", false, "Force remove running container")
-	containersRemoveCmd.MarkFlagRequired("endpoint")
+	containersRemoveCmd.Flags().BoolP("force", "f", false, "Force removal of running container")
+	_ = containersRemoveCmd.MarkFlagRequired("endpoint")
 }

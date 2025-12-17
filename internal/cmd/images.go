@@ -396,10 +396,10 @@ func init() {
 	imagesListCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
 	imagesListCmd.Flags().BoolP("watch", "w", false, "Watch for changes and continuously update")
 	imagesListCmd.Flags().Int("interval", 2, "Refresh interval in seconds for watch mode")
-	imagesListCmd.MarkFlagRequired("endpoint")
+	_ = imagesListCmd.MarkFlagRequired("endpoint")
 
 	imagesInspectCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
-	imagesInspectCmd.MarkFlagRequired("endpoint")
+	_ = imagesInspectCmd.MarkFlagRequired("endpoint")
 
 	imagesPullCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
 	imagesPullCmd.Flags().Int("registry", 0, "Registry ID for authentication")
