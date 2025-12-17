@@ -126,23 +126,11 @@ release:
     
     Thank you for using Portainer CLI!
 
-brews:
-  - name: portainer-cli
-    repository:
-      owner: robversluis
-      name: homebrew-tap
-    directory: Formula
-    homepage: https://github.com/robversluis/portainer-cli
-    description: Command-line interface for Portainer
-    license: MIT
-    install: |
-      bin.install "portainer-cli"
-      
-      bash_completion.install "completions/portainer-cli.bash" => "portainer-cli"
-      zsh_completion.install "completions/_portainer-cli" => "_portainer-cli"
-      fish_completion.install "completions/portainer-cli.fish"
-    test: |
-      system "#{bin}/portainer-cli", "version"
+# Homebrew tap disabled (repository doesn't exist yet)
+# brews:
+#   - repository:
+#       owner: robversluis
+#       name: homebrew-tap
 
 nfpms:
   - id: portainer-cli
