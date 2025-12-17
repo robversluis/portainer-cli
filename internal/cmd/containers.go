@@ -23,12 +23,18 @@ var containersListCmd = &cobra.Command{
 	Short:   "List containers",
 	Long:    `Display a list of containers in the specified environment.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		endpointID, _ := cmd.Flags().GetInt("endpoint")
+		endpointID, err := cmd.Flags().GetInt("endpoint")
+		if err != nil {
+			return err
+		}
 		if endpointID == 0 {
 			return fmt.Errorf("--endpoint flag is required")
 		}
 
-		all, _ := cmd.Flags().GetBool("all")
+		all, err := cmd.Flags().GetBool("all")
+		if err != nil {
+			return err
+		}
 
 		profile, err := config.GetProfileFromViper()
 		if err != nil {
@@ -79,14 +85,23 @@ var containersLogsCmd = &cobra.Command{
 	Long:  `Display logs from a specific container.`,
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		endpointID, _ := cmd.Flags().GetInt("endpoint")
+		endpointID, err := cmd.Flags().GetInt("endpoint")
+		if err != nil {
+			return err
+		}
 		if endpointID == 0 {
 			return fmt.Errorf("--endpoint flag is required")
 		}
 
 		containerID := args[0]
-		follow, _ := cmd.Flags().GetBool("follow")
-		tail, _ := cmd.Flags().GetInt("tail")
+		follow, err := cmd.Flags().GetBool("follow")
+		if err != nil {
+			return err
+		}
+		tail, err := cmd.Flags().GetInt("tail")
+		if err != nil {
+			return err
+		}
 
 		profile, err := config.GetProfileFromViper()
 		if err != nil {
@@ -128,7 +143,10 @@ var containersInspectCmd = &cobra.Command{
 	Long:  `Display detailed information about a specific container.`,
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		endpointID, _ := cmd.Flags().GetInt("endpoint")
+		endpointID, err := cmd.Flags().GetInt("endpoint")
+		if err != nil {
+			return err
+		}
 		if endpointID == 0 {
 			return fmt.Errorf("--endpoint flag is required")
 		}
@@ -208,7 +226,10 @@ var containersStartCmd = &cobra.Command{
 	Long:  `Start one or more stopped containers.`,
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		endpointID, _ := cmd.Flags().GetInt("endpoint")
+		endpointID, err := cmd.Flags().GetInt("endpoint")
+		if err != nil {
+			return err
+		}
 		if endpointID == 0 {
 			return fmt.Errorf("--endpoint flag is required")
 		}
@@ -244,7 +265,10 @@ var containersStopCmd = &cobra.Command{
 	Long:  `Stop one or more running containers.`,
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		endpointID, _ := cmd.Flags().GetInt("endpoint")
+		endpointID, err := cmd.Flags().GetInt("endpoint")
+		if err != nil {
+			return err
+		}
 		if endpointID == 0 {
 			return fmt.Errorf("--endpoint flag is required")
 		}
@@ -280,7 +304,10 @@ var containersRestartCmd = &cobra.Command{
 	Long:  `Restart one or more containers.`,
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		endpointID, _ := cmd.Flags().GetInt("endpoint")
+		endpointID, err := cmd.Flags().GetInt("endpoint")
+		if err != nil {
+			return err
+		}
 		if endpointID == 0 {
 			return fmt.Errorf("--endpoint flag is required")
 		}
@@ -317,13 +344,19 @@ var containersRemoveCmd = &cobra.Command{
 	Long:    `Remove one or more containers.`,
 	Args:    cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		endpointID, _ := cmd.Flags().GetInt("endpoint")
+		endpointID, err := cmd.Flags().GetInt("endpoint")
+		if err != nil {
+			return err
+		}
 		if endpointID == 0 {
 			return fmt.Errorf("--endpoint flag is required")
 		}
 
 		containerID := args[0]
-		force, _ := cmd.Flags().GetBool("force")
+		force, err := cmd.Flags().GetBool("force")
+		if err != nil {
+			return err
+		}
 
 		profile, err := config.GetProfileFromViper()
 		if err != nil {

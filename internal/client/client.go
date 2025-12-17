@@ -55,7 +55,10 @@ func WithMaxRetries(retries int) ClientOption {
 func WithInsecure(insecure bool) ClientOption {
 	return func(c *Client) {
 		if insecure {
-			transport := c.httpClient.Transport.(*http.Transport)
+			transport, ok := c.httpClient.Transport.(*http.Transport)
+			if !ok {
+				return
+			}
 			transport.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 		}
 	}
@@ -63,7 +66,10 @@ func WithInsecure(insecure bool) ClientOption {
 
 func WithCustomCA(certPool *tls.Config) ClientOption {
 	return func(c *Client) {
-		transport := c.httpClient.Transport.(*http.Transport)
+		transport, ok := c.httpClient.Transport.(*http.Transport)
+		if !ok {
+			return
+		}
 		transport.TLSClientConfig = certPool
 	}
 }
