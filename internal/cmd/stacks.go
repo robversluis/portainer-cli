@@ -379,24 +379,24 @@ func init() {
 	stacksListCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
 	stacksListCmd.Flags().BoolP("watch", "w", false, "Watch for changes and continuously update")
 	stacksListCmd.Flags().Int("interval", 2, "Refresh interval in seconds for watch mode")
-	stacksListCmd.MarkFlagRequired("endpoint")
+	_ = stacksListCmd.MarkFlagRequired("endpoint")
 
 	stacksDeployCmd.Flags().String("file", "", "Path to stack file (required)")
 	stacksDeployCmd.Flags().String("name", "", "Stack name (required)")
 	stacksDeployCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
 	stacksDeployCmd.Flags().StringArray("env", []string{}, "Environment variables (KEY=VALUE)")
-	stacksDeployCmd.MarkFlagRequired("file")
-	stacksDeployCmd.MarkFlagRequired("name")
-	stacksDeployCmd.MarkFlagRequired("endpoint")
+	_ = stacksDeployCmd.MarkFlagRequired("file")
+	_ = stacksDeployCmd.MarkFlagRequired("name")
+	_ = stacksDeployCmd.MarkFlagRequired("endpoint")
 
 	stacksGetCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required for name lookup)")
 
 	stacksRemoveCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
-	stacksRemoveCmd.MarkFlagRequired("endpoint")
+	_ = stacksRemoveCmd.MarkFlagRequired("endpoint")
 
 	stacksUpdateCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
 	stacksUpdateCmd.Flags().String("file", "", "Path to stack file (required)")
 	stacksUpdateCmd.Flags().StringArray("env", []string{}, "Environment variables (KEY=VALUE)")
-	stacksUpdateCmd.MarkFlagRequired("endpoint")
-	stacksUpdateCmd.MarkFlagRequired("file")
+	_ = stacksUpdateCmd.MarkFlagRequired("endpoint")
+	_ = stacksUpdateCmd.MarkFlagRequired("file")
 }

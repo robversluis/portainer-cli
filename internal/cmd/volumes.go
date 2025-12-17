@@ -280,19 +280,19 @@ func init() {
 	volumesCmd.AddCommand(volumesPruneCmd)
 
 	volumesListCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
-	volumesListCmd.MarkFlagRequired("endpoint")
+	_ = volumesListCmd.MarkFlagRequired("endpoint")
 
 	volumesInspectCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
-	volumesInspectCmd.MarkFlagRequired("endpoint")
+	_ = volumesInspectCmd.MarkFlagRequired("endpoint")
 
 	volumesCreateCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
 	volumesCreateCmd.Flags().String("driver", "local", "Volume driver")
-	volumesCreateCmd.MarkFlagRequired("endpoint")
+	_ = volumesCreateCmd.MarkFlagRequired("endpoint")
 
 	volumesRemoveCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
 	volumesRemoveCmd.Flags().BoolP("force", "f", false, "Force removal of the volume")
-	volumesRemoveCmd.MarkFlagRequired("endpoint")
+	_ = volumesRemoveCmd.MarkFlagRequired("endpoint")
 
 	volumesPruneCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
-	volumesPruneCmd.MarkFlagRequired("endpoint")
+	_ = volumesPruneCmd.MarkFlagRequired("endpoint")
 }

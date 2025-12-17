@@ -294,20 +294,20 @@ func init() {
 	networksCmd.AddCommand(networksPruneCmd)
 
 	networksListCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
-	networksListCmd.MarkFlagRequired("endpoint")
+	_ = networksListCmd.MarkFlagRequired("endpoint")
 
 	networksInspectCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
-	networksInspectCmd.MarkFlagRequired("endpoint")
+	_ = networksInspectCmd.MarkFlagRequired("endpoint")
 
 	networksCreateCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
 	networksCreateCmd.Flags().String("driver", "bridge", "Network driver")
 	networksCreateCmd.Flags().Bool("internal", false, "Restrict external access to the network")
 	networksCreateCmd.Flags().Bool("attachable", false, "Enable manual container attachment")
-	networksCreateCmd.MarkFlagRequired("endpoint")
+	_ = networksCreateCmd.MarkFlagRequired("endpoint")
 
 	networksRemoveCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
-	networksRemoveCmd.MarkFlagRequired("endpoint")
+	_ = networksRemoveCmd.MarkFlagRequired("endpoint")
 
 	networksPruneCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
-	networksPruneCmd.MarkFlagRequired("endpoint")
+	_ = networksPruneCmd.MarkFlagRequired("endpoint")
 }
