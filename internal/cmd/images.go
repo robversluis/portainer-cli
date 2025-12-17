@@ -403,15 +403,15 @@ func init() {
 
 	imagesPullCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
 	imagesPullCmd.Flags().Int("registry", 0, "Registry ID for authentication")
-	imagesPullCmd.MarkFlagRequired("endpoint")
+	_ = imagesPullCmd.MarkFlagRequired("endpoint")
 
 	imagesRemoveCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
 	imagesRemoveCmd.Flags().BoolP("force", "f", false, "Force removal of the image")
-	imagesRemoveCmd.MarkFlagRequired("endpoint")
+	_ = imagesRemoveCmd.MarkFlagRequired("endpoint")
 
 	imagesPruneCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
 	imagesPruneCmd.Flags().Bool("dangling", true, "Remove only dangling images")
-	imagesPruneCmd.MarkFlagRequired("endpoint")
+	_ = imagesPruneCmd.MarkFlagRequired("endpoint")
 
 	imagesTagCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
 	imagesTagCmd.MarkFlagRequired("endpoint")
