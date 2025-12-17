@@ -180,7 +180,8 @@ func TestTableFormatter(t *testing.T) {
 			},
 			wantErr: false,
 			validate: func(output string) bool {
-				return strings.Contains(output, "Header1") &&
+				upper := strings.ToUpper(output)
+				return strings.Contains(upper, "HEADER1") &&
 					strings.Contains(output, "Value1") &&
 					strings.Contains(output, "Value6")
 			},

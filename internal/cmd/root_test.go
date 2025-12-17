@@ -61,7 +61,7 @@ func TestGetters(t *testing.T) {
 		t.Error("GetQuiet should return true")
 	}
 
-	output = "json"
+	outputFormat = "json"
 	if GetOutput() != "json" {
 		t.Errorf("Expected output to be 'json', got '%s'", GetOutput())
 	}

@@ -9,13 +9,13 @@ import (
 )
 
 var (
-	cfgFile string
-	profile string
-	url     string
-	apiKey  string
-	output  string
-	verbose bool
-	quiet   bool
+	cfgFile      string
+	profile      string
+	url          string
+	apiKey       string
+	outputFormat string
+	verbose      bool
+	quiet        bool
 )
 
 var rootCmd = &cobra.Command{
@@ -42,7 +42,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&profile, "profile", "", "profile/context to use")
 	rootCmd.PersistentFlags().StringVar(&url, "url", "", "Portainer URL (overrides config)")
 	rootCmd.PersistentFlags().StringVar(&apiKey, "api-key", "", "API key for authentication (overrides config)")
-	rootCmd.PersistentFlags().StringVarP(&output, "output", "o", "table", "output format (table, json, yaml)")
+	rootCmd.PersistentFlags().StringVarP(&outputFormat, "output", "o", "table", "output format (table, json, yaml)")
 	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "verbose output")
 	rootCmd.PersistentFlags().BoolVarP(&quiet, "quiet", "q", false, "quiet mode (minimal output)")
 
@@ -105,7 +105,7 @@ func GetQuiet() bool {
 }
 
 func GetOutput() string {
-	return output
+	return outputFormat
 }
 
 func GetURL() string {
