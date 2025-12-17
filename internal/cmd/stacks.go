@@ -1,12 +1,18 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
+	"os"
+	"os/signal"
 	"strings"
+	"syscall"
+	"time"
 
 	"github.com/robversluis/portainer-cli/internal/client"
 	"github.com/robversluis/portainer-cli/internal/config"
 	"github.com/robversluis/portainer-cli/internal/output"
+	"github.com/robversluis/portainer-cli/internal/watch"
 	"github.com/spf13/cobra"
 )
 
@@ -30,6 +36,16 @@ var stacksListCmd = &cobra.Command{
 			return fmt.Errorf("--endpoint flag is required")
 		}
 
+		watchMode, err := cmd.Flags().GetBool("watch")
+		if err != nil {
+			return err
+		}
+
+		interval, err := cmd.Flags().GetInt("interval")
+		if err != nil {
+			return err
+		}
+
 		profile, err := config.GetProfileFromViper()
 		if err != nil {
 			return fmt.Errorf("failed to get profile: %w", err)
@@ -41,30 +57,52 @@ var stacksListCmd = &cobra.Command{
 		}
 
 		stackService := client.NewStackService(c)
-		stacks, err := stackService.List(endpointID)
-		if err != nil {
-			return err
-		}
-
 		format := output.ParseFormat(cmd.Flag("output").Value.String())
 
-		switch format {
-		case output.FormatJSON, output.FormatYAML:
-			formatter := output.NewFormatter(output.Options{Format: format})
-			return formatter.Format(stacks)
-
-		default:
-			table := output.NewTableData([]string{"ID", "Name", "Type", "Status"})
-			for _, stack := range stacks {
-				table.AddRow([]string{
-					fmt.Sprintf("%d", stack.Id),
-					stack.Name,
-					stack.TypeString(),
-					stack.StatusString(),
-				})
+		listFunc := func() error {
+			stacks, err := stackService.List(endpointID)
+			if err != nil {
+				return err
 			}
-			return output.PrintTable(*table)
+
+			switch format {
+			case output.FormatJSON, output.FormatYAML:
+				formatter := output.NewFormatter(output.Options{Format: format})
+				return formatter.Format(stacks)
+
+			default:
+				table := output.NewTableData([]string{"ID", "Name", "Type", "Status"})
+				for _, stack := range stacks {
+					table.AddRow([]string{
+						fmt.Sprintf("%d", stack.Id),
+						stack.Name,
+						stack.TypeString(),
+						stack.StatusString(),
+					})
+				}
+				return output.PrintTable(*table)
+			}
 		}
+
+		if watchMode {
+			ctx, cancel := context.WithCancel(context.Background())
+			defer cancel()
+
+			sigChan := make(chan os.Signal, 1)
+			signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
+			go func() {
+				<-sigChan
+				cancel()
+			}()
+
+			opts := watch.DefaultOptions()
+			opts.Interval = time.Duration(interval) * time.Second
+
+			fmt.Println("Watching stacks... (Press Ctrl+C to exit)")
+			return watch.Watch(ctx, opts, listFunc)
+		}
+
+		return listFunc()
 	},
 }
 
@@ -339,6 +377,8 @@ func init() {
 	stacksCmd.AddCommand(stacksRemoveCmd)
 
 	stacksListCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
+	stacksListCmd.Flags().BoolP("watch", "w", false, "Watch for changes and continuously update")
+	stacksListCmd.Flags().Int("interval", 2, "Refresh interval in seconds for watch mode")
 	stacksListCmd.MarkFlagRequired("endpoint")
 
 	stacksDeployCmd.Flags().String("file", "", "Path to stack file (required)")

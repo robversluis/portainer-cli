@@ -1,12 +1,17 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"github.com/robversluis/portainer-cli/internal/client"
 	"github.com/robversluis/portainer-cli/internal/config"
 	"github.com/robversluis/portainer-cli/internal/output"
+	"github.com/robversluis/portainer-cli/internal/watch"
 	"github.com/spf13/cobra"
 )
 
@@ -30,6 +35,16 @@ var imagesListCmd = &cobra.Command{
 			return fmt.Errorf("--endpoint flag is required")
 		}
 
+		watchMode, err := cmd.Flags().GetBool("watch")
+		if err != nil {
+			return err
+		}
+
+		interval, err := cmd.Flags().GetInt("interval")
+		if err != nil {
+			return err
+		}
+
 		profile, err := config.GetProfileFromViper()
 		if err != nil {
 			return fmt.Errorf("failed to get profile: %w", err)
@@ -41,32 +56,54 @@ var imagesListCmd = &cobra.Command{
 		}
 
 		imageService := client.NewImageService(c)
-		images, err := imageService.List(endpointID)
-		if err != nil {
-			return err
-		}
-
 		format := output.ParseFormat(cmd.Flag("output").Value.String())
 
-		switch format {
-		case output.FormatJSON, output.FormatYAML:
-			formatter := output.NewFormatter(output.Options{Format: format})
-			return formatter.Format(images)
-
-		default:
-			table := output.NewTableData([]string{"ID", "Repository", "Tag", "Size", "Created"})
-			for _, image := range images {
-				createdTime := time.Unix(image.Created, 0)
-				table.AddRow([]string{
-					image.GetShortID(),
-					image.GetRepository(),
-					image.GetTag(),
-					output.FormatSize(image.Size),
-					output.FormatDuration(int64(time.Since(createdTime).Seconds())),
-				})
+		listFunc := func() error {
+			images, err := imageService.List(endpointID)
+			if err != nil {
+				return err
 			}
-			return output.PrintTable(*table)
+
+			switch format {
+			case output.FormatJSON, output.FormatYAML:
+				formatter := output.NewFormatter(output.Options{Format: format})
+				return formatter.Format(images)
+
+			default:
+				table := output.NewTableData([]string{"ID", "Repository", "Tag", "Size", "Created"})
+				for _, image := range images {
+					createdTime := time.Unix(image.Created, 0)
+					table.AddRow([]string{
+						image.GetShortID(),
+						image.GetRepository(),
+						image.GetTag(),
+						output.FormatSize(image.Size),
+						output.FormatDuration(int64(time.Since(createdTime).Seconds())),
+					})
+				}
+				return output.PrintTable(*table)
+			}
 		}
+
+		if watchMode {
+			ctx, cancel := context.WithCancel(context.Background())
+			defer cancel()
+
+			sigChan := make(chan os.Signal, 1)
+			signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
+			go func() {
+				<-sigChan
+				cancel()
+			}()
+
+			opts := watch.DefaultOptions()
+			opts.Interval = time.Duration(interval) * time.Second
+
+			fmt.Println("Watching images... (Press Ctrl+C to exit)")
+			return watch.Watch(ctx, opts, listFunc)
+		}
+
+		return listFunc()
 	},
 }
 
@@ -357,6 +394,8 @@ func init() {
 	imagesCmd.AddCommand(imagesTagCmd)
 
 	imagesListCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
+	imagesListCmd.Flags().BoolP("watch", "w", false, "Watch for changes and continuously update")
+	imagesListCmd.Flags().Int("interval", 2, "Refresh interval in seconds for watch mode")
 	imagesListCmd.MarkFlagRequired("endpoint")
 
 	imagesInspectCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")

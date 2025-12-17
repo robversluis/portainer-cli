@@ -2,12 +2,18 @@ package cmd
 
 import (
 	"bufio"
+	"context"
 	"fmt"
 	"io"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/robversluis/portainer-cli/internal/client"
 	"github.com/robversluis/portainer-cli/internal/config"
 	"github.com/robversluis/portainer-cli/internal/output"
+	"github.com/robversluis/portainer-cli/internal/watch"
 	"github.com/spf13/cobra"
 )
 
@@ -36,6 +42,16 @@ var containersListCmd = &cobra.Command{
 			return err
 		}
 
+		watchMode, err := cmd.Flags().GetBool("watch")
+		if err != nil {
+			return err
+		}
+
+		interval, err := cmd.Flags().GetInt("interval")
+		if err != nil {
+			return err
+		}
+
 		profile, err := config.GetProfileFromViper()
 		if err != nil {
 			return fmt.Errorf("failed to get profile: %w", err)
@@ -47,35 +63,57 @@ var containersListCmd = &cobra.Command{
 		}
 
 		containerService := client.NewContainerService(c)
-		containers, err := containerService.List(endpointID, all)
-		if err != nil {
-			return err
-		}
-
 		format := output.ParseFormat(cmd.Flag("output").Value.String())
 
-		switch format {
-		case output.FormatJSON, output.FormatYAML:
-			formatter := output.NewFormatter(output.Options{Format: format})
-			return formatter.Format(containers)
-
-		default:
-			table := output.NewTableData([]string{"ID", "Name", "Image", "Status", "Ports"})
-			for _, container := range containers {
-				ports := container.GetPorts()
-				if len(ports) > 50 {
-					ports = output.TruncateString(ports, 50)
-				}
-				table.AddRow([]string{
-					container.GetShortID(),
-					container.GetName(),
-					container.Image,
-					container.GetStatus(),
-					ports,
-				})
+		listFunc := func() error {
+			containers, err := containerService.List(endpointID, all)
+			if err != nil {
+				return err
 			}
-			return output.PrintTable(*table)
+
+			switch format {
+			case output.FormatJSON, output.FormatYAML:
+				formatter := output.NewFormatter(output.Options{Format: format})
+				return formatter.Format(containers)
+
+			default:
+				table := output.NewTableData([]string{"ID", "Name", "Image", "Status", "Ports"})
+				for _, container := range containers {
+					ports := container.GetPorts()
+					if len(ports) > 50 {
+						ports = output.TruncateString(ports, 50)
+					}
+					table.AddRow([]string{
+						container.GetShortID(),
+						container.GetName(),
+						container.Image,
+						container.GetStatus(),
+						ports,
+					})
+				}
+				return output.PrintTable(*table)
+			}
 		}
+
+		if watchMode {
+			ctx, cancel := context.WithCancel(context.Background())
+			defer cancel()
+
+			sigChan := make(chan os.Signal, 1)
+			signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
+			go func() {
+				<-sigChan
+				cancel()
+			}()
+
+			opts := watch.DefaultOptions()
+			opts.Interval = time.Duration(interval) * time.Second
+
+			fmt.Println("Watching containers... (Press Ctrl+C to exit)")
+			return watch.Watch(ctx, opts, listFunc)
+		}
+
+		return listFunc()
 	},
 }
 
@@ -393,6 +431,8 @@ func init() {
 
 	containersListCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
 	containersListCmd.Flags().BoolP("all", "a", false, "Show all containers (default shows just running)")
+	containersListCmd.Flags().BoolP("watch", "w", false, "Watch for changes and continuously update")
+	containersListCmd.Flags().Int("interval", 2, "Refresh interval in seconds for watch mode")
 	containersListCmd.MarkFlagRequired("endpoint")
 
 	containersLogsCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
