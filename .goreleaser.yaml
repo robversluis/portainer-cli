@@ -8,8 +8,9 @@ before:
 
 builds:
   - id: portainer-cli
-    main: ./cmd/portainer-cli/main.go
+    main: ./cmd/portainer-cli
     binary: portainer-cli
+    dir: .
     env:
       - CGO_ENABLED=0
     goos:
