@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.4] - 2025-12-17
+
+### Fixed
+- **API Key Flag Binding**: Fixed viper binding for `--api-key` flag
+  - Changed viper key from `api-key` to `api_key` to match config struct
+  - CLI flags now properly override config file values
+  - Resolves authentication errors when using `--api-key` flag
+- **Additional Lint Fixes**: Resolved remaining lint errors
+  - Fixed `viper.BindPFlag` errcheck errors in root.go (3 instances)
+  - Replaced deprecated `cobra.ExactValidArgs` with `cobra.MatchAll`
+  - Updated golangci-lint configuration for compatibility
+  - Applied `go fmt` formatting across all files
+
 ## [1.0.3] - 2025-12-17
 
 ### Fixed
@@ -132,6 +145,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Environment management documentation
 - Configuration examples and best practices
 
+[1.0.4]: https://github.com/robversluis/portainer-cli/releases/tag/v1.0.4
 [1.0.3]: https://github.com/robversluis/portainer-cli/releases/tag/v1.0.3
 [1.0.2]: https://github.com/robversluis/portainer-cli/releases/tag/v1.0.2
 [1.0.1]: https://github.com/robversluis/portainer-cli/releases/tag/v1.0.1
