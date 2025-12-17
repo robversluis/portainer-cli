@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.2] - 2025-12-17
+
+### Added
+- **Watch Mode for Continuous Monitoring**: Real-time monitoring of resources with automatic refresh
+  - Added `--watch` flag to `containers list`, `stacks list`, and `images list` commands
+  - Added `--interval` flag to control refresh rate (default: 2 seconds)
+  - Clear screen between updates for clean display
+  - Show timestamp of last update
+  - Graceful exit with Ctrl+C (SIGINT/SIGTERM handling)
+  - Works with all output formats (table, JSON, YAML)
+  - Cross-platform support (Linux, macOS, Windows)
+
+### Technical Details
+- Created `internal/watch` package for reusable watch functionality
+- Context-based cancellation for proper cleanup
+- Signal handling for graceful shutdown
+
 ## [1.0.1] - 2025-12-17
 
 ### Added
@@ -106,5 +123,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Environment management documentation
 - Configuration examples and best practices
 
+[1.0.2]: https://github.com/robversluis/portainer-cli/releases/tag/v1.0.2
 [1.0.1]: https://github.com/robversluis/portainer-cli/releases/tag/v1.0.1
 [1.0.0]: https://github.com/robversluis/portainer-cli/releases/tag/v1.0.0
