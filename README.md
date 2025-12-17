@@ -15,7 +15,7 @@ A powerful command-line interface tool for managing Portainer environments, writ
 
 ### Download Pre-built Binaries
 
-Download the latest release for your platform from the [releases page](https://github.com/rob/portainer-cli/releases).
+Download the latest release for your platform from the [releases page](https://github.com/robversluis/portainer-cli/releases).
 
 #### Linux/macOS
 ```bash
@@ -38,7 +38,7 @@ Requires Go 1.21 or later.
 
 ```bash
 # Clone the repository
-git clone https://github.com/rob/portainer-cli.git
+git clone https://github.com/robversluis/portainer-cli.git
 cd portainer-cli
 
 # Build
@@ -74,6 +74,9 @@ portainer-cli containers list --endpoint 1
 
 # Deploy a stack
 portainer-cli stacks deploy --file docker-compose.yml --endpoint 1 --name mystack
+
+# Update a stack
+portainer-cli stacks update 7 --endpoint 3 --file docker-compose.yml
 
 # View container logs
 portainer-cli containers logs my-container --follow
@@ -131,18 +134,14 @@ Override configuration with environment variables:
 ### Available Commands
 
 - `auth`: Authentication operations (login, logout, status)
+- `config`: Configuration management
 - `environments`: Manage Portainer environments/endpoints
-- `containers`: Docker container operations
-- `stacks`: Stack deployment and management
-- `images`: Docker image operations
+- `containers`: Docker container operations (list, logs, inspect, start, stop, restart, remove)
+- `stacks`: Stack deployment and management (list, deploy, get, update, remove)
+- `images`: Docker image operations (list, inspect, pull, remove, prune, tag)
+- `networks`: Docker network operations (list, inspect, create, remove, prune)
+- `volumes`: Docker volume operations (list, inspect, create, remove, prune)
 - `registries`: Registry management
-- `kubernetes`: Kubernetes cluster operations
-- `edge`: Edge computing operations
-- `users`: User management
-- `teams`: Team management
-- `templates`: Custom template management
-- `backup`: Backup and restore operations
-- `system`: System information and settings
 
 Run `portainer-cli <command> --help` for detailed command information.
 
@@ -220,12 +219,19 @@ Contributions are welcome! Please:
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/rob/portainer-cli/issues)
-- **Documentation**: [Full documentation](https://github.com/rob/portainer-cli/docs)
+- **Issues**: [GitHub Issues](https://github.com/robversluis/portainer-cli/issues)
+- **Documentation**: [Full documentation](https://github.com/robversluis/portainer-cli/blob/main/docs)
 
 ## Roadmap
 
 See the [PRD document](.taskmaster/docs/prd.txt) for detailed feature roadmap and future enhancements.
+
+### Implemented Features
+
+- ✅ Watch mode for continuous monitoring (v1.0.2)
+- ✅ Stack update command (v1.0.1)
+- ✅ Multiple output formats (table, json, yaml)
+- ✅ Profile/context management
 
 ### Upcoming Features
 
@@ -233,5 +239,4 @@ See the [PRD document](.taskmaster/docs/prd.txt) for detailed feature roadmap an
 - Shell completion (bash, zsh, fish)
 - Colored output
 - Progress bars for long operations
-- Watch mode for continuous monitoring
 - Plugin system for extensions
