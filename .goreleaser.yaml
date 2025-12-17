@@ -1,5 +1,5 @@
 project_name: portainer-cli
-version: 1
+version: 2
 
 before:
   hooks:
@@ -147,35 +147,18 @@ brews:
 nfpms:
   - id: portainer-cli
     package_name: portainer-cli
-    file_name_template: >-
-      {{ .ProjectName }}_
-      {{- .Version }}_
-      {{- .Os }}_
-      {{- if eq .Arch "amd64" }}x86_64
-      {{- else }}{{ .Arch }}{{ end }}
-    vendor: Rob
+    vendor: Rob Versluis
     homepage: https://github.com/robversluis/portainer-cli
-    maintainer: Rob <rob@example.com>
-    description: Command-line interface for Portainer
+    maintainer: Rob Versluis <rob.versluis@gmail.com>
+    description: |
+      Command-line interface for managing Portainer.
+      Provides easy access to Portainer API for container, stack, and environment management.
     license: MIT
     formats:
       - deb
       - rpm
       - apk
     bindir: /usr/bin
-    contents:
-      - src: ./completions/portainer-cli.bash
-        dst: /usr/share/bash-completion/completions/portainer-cli
-        file_info:
-          mode: 0644
-      - src: ./completions/_portainer-cli
-        dst: /usr/share/zsh/site-functions/_portainer-cli
-        file_info:
-          mode: 0644
-      - src: ./completions/portainer-cli.fish
-        dst: /usr/share/fish/vendor_completions.d/portainer-cli.fish
-        file_info:
-          mode: 0644
 
 dockers:
   - image_templates:
