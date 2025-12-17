@@ -47,7 +47,7 @@ func init() {
 	rootCmd.PersistentFlags().BoolVarP(&quiet, "quiet", "q", false, "quiet mode (minimal output)")
 
 	_ = viper.BindPFlag("url", rootCmd.PersistentFlags().Lookup("url"))
-	_ = viper.BindPFlag("api-key", rootCmd.PersistentFlags().Lookup("api-key"))
+	_ = viper.BindPFlag("api_key", rootCmd.PersistentFlags().Lookup("api-key"))
 	_ = viper.BindPFlag("profile", rootCmd.PersistentFlags().Lookup("profile"))
 
 	rootCmd.AddCommand(completionCmd)
