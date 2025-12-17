@@ -104,7 +104,9 @@ func NewClient(profile *config.Profile, opts ...ClientOption) (*Client, error) {
 	}
 
 	for _, opt := range opts {
-		opt(client)
+		if opt != nil {
+			opt(client)
+		}
 	}
 
 	return client, nil
@@ -239,7 +241,13 @@ func checkResponse(resp *http.Response) error {
 		return nil
 	}
 
-	bodyBytes, _ := io.ReadAll(resp.Body)
+	bodyBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return &APIError{
+			StatusCode: resp.StatusCode,
+			Message:    fmt.Sprintf("HTTP %d: failed to read response body", resp.StatusCode),
+		}
+	}
 	bodyString := string(bodyBytes)
 
 	var apiError APIError

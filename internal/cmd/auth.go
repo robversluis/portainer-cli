@@ -22,12 +22,20 @@ var authLoginCmd = &cobra.Command{
 	Long: `Authenticate with Portainer using username and password.
 The JWT token will be stored in the current profile for future use.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		username, _ := cmd.Flags().GetString("username")
-		password, _ := cmd.Flags().GetString("password")
+		username, err := cmd.Flags().GetString("username")
+		if err != nil {
+			return err
+		}
+		password, err := cmd.Flags().GetString("password")
+		if err != nil {
+			return err
+		}
 
 		if username == "" {
 			fmt.Print("Username: ")
-			fmt.Scanln(&username)
+			if _, err := fmt.Scanln(&username); err != nil {
+				return fmt.Errorf("failed to read username: %w", err)
+			}
 		}
 
 		if password == "" {

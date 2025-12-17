@@ -33,8 +33,13 @@ var configInitCmd = &cobra.Command{
 			return fmt.Errorf("failed to save config: %w", err)
 		}
 
-		configPath, _ := config.GetConfigPath()
-		fmt.Printf("Configuration initialized at: %s\n", configPath)
+		configPath, err := config.GetConfigPath()
+		if err != nil {
+			return fmt.Errorf("failed to get config path: %w", err)
+		}
+		if !GetQuiet() {
+			fmt.Printf("Configuration initialized at: %s\n", configPath)
+		}
 		return nil
 	},
 }
@@ -53,12 +58,16 @@ Examples:
 		key := args[0]
 		value := args[1]
 
+		profileName, err := cmd.Flags().GetString("profile")
+		if err != nil {
+			return err
+		}
+
 		cfg, err := config.Load()
 		if err != nil {
 			return fmt.Errorf("failed to load config: %w", err)
 		}
 
-		profileName, _ := cmd.Flags().GetString("profile")
 		if profileName == "" {
 			profileName = cfg.CurrentProfile
 		}
@@ -113,7 +122,10 @@ Examples:
 			return fmt.Errorf("failed to load config: %w", err)
 		}
 
-		profileName, _ := cmd.Flags().GetString("profile")
+		profileName, err := cmd.Flags().GetString("profile")
+		if err != nil {
+			return err
+		}
 		if profileName == "" {
 			profileName = cfg.CurrentProfile
 		}
@@ -247,10 +259,22 @@ Examples:
 			return fmt.Errorf("profile '%s' already exists", profileName)
 		}
 
-		url, _ := cmd.Flags().GetString("url")
-		apiKey, _ := cmd.Flags().GetString("api-key")
-		username, _ := cmd.Flags().GetString("username")
-		insecure, _ := cmd.Flags().GetBool("insecure")
+		url, err := cmd.Flags().GetString("url")
+		if err != nil {
+			return err
+		}
+		apiKey, err := cmd.Flags().GetString("api-key")
+		if err != nil {
+			return err
+		}
+		username, err := cmd.Flags().GetString("username")
+		if err != nil {
+			return err
+		}
+		insecure, err := cmd.Flags().GetBool("insecure")
+		if err != nil {
+			return err
+		}
 
 		profile := &config.Profile{
 			URL:      url,
