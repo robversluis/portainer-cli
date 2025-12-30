@@ -332,7 +332,12 @@ var stacksUpdateCmd = &cobra.Command{
 			return fmt.Errorf("failed to get profile: %w", err)
 		}
 
-		c, err := client.NewClient(profile, client.WithVerbose(GetVerbose()))
+		opts := []client.ClientOption{client.WithVerbose(GetVerbose())}
+		if GetNoRetry() {
+			opts = append(opts, client.WithMaxRetries(0))
+		}
+
+		c, err := client.NewClient(profile, opts...)
 		if err != nil {
 			return fmt.Errorf("failed to create client: %w", err)
 		}

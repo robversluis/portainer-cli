@@ -16,6 +16,7 @@ var (
 	outputFormat string
 	verbose      bool
 	quiet        bool
+	noRetry      bool
 )
 
 var rootCmd = &cobra.Command{
@@ -45,6 +46,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVarP(&outputFormat, "output", "o", "table", "output format (table, json, yaml)")
 	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "verbose output")
 	rootCmd.PersistentFlags().BoolVarP(&quiet, "quiet", "q", false, "quiet mode (minimal output)")
+	rootCmd.PersistentFlags().BoolVar(&noRetry, "no-retry", false, "disable retry on failed requests")
 
 	_ = viper.BindPFlag("url", rootCmd.PersistentFlags().Lookup("url"))
 	_ = viper.BindPFlag("api_key", rootCmd.PersistentFlags().Lookup("api-key"))
@@ -104,6 +106,10 @@ func GetVerbose() bool {
 
 func GetQuiet() bool {
 	return quiet
+}
+
+func GetNoRetry() bool {
+	return noRetry
 }
 
 var completionCmd = &cobra.Command{

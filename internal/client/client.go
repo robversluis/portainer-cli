@@ -15,9 +15,9 @@ import (
 )
 
 const (
-	defaultTimeout    = 30 * time.Second
+	defaultTimeout    = 300 * time.Second
 	defaultMaxRetries = 3
-	defaultRetryDelay = 1 * time.Second
+	defaultRetryDelay = 2 * time.Second
 	userAgent         = "portainer-cli"
 )
 
@@ -135,17 +135,25 @@ func (c *Client) newRequest(method, path string, body interface{}) (*http.Reques
 	url := c.buildURL(path)
 
 	var bodyReader io.Reader
+	var jsonData []byte
 	if body != nil {
-		jsonData, err := json.Marshal(body)
+		var err error
+		jsonData, err = json.Marshal(body)
 		if err != nil {
 			return nil, fmt.Errorf("failed to marshal request body: %w", err)
 		}
-		bodyReader = bytes.NewBuffer(jsonData)
+		bodyReader = bytes.NewReader(jsonData)
 	}
 
 	req, err := http.NewRequest(method, url, bodyReader)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create request: %w", err)
+	}
+
+	if body != nil {
+		req.GetBody = func() (io.ReadCloser, error) {
+			return io.NopCloser(bytes.NewReader(jsonData)), nil
+		}
 	}
 
 	req.Header.Set("User-Agent", userAgent)
@@ -172,6 +180,14 @@ func (c *Client) do(req *http.Request) (*http.Response, error) {
 				fmt.Printf("Retry attempt %d/%d after %v\n", attempt, c.maxRetries, c.retryDelay)
 			}
 			time.Sleep(c.retryDelay)
+
+			// Reset request body for retry
+			if req.GetBody != nil {
+				req.Body, err = req.GetBody()
+				if err != nil {
+					return nil, fmt.Errorf("failed to reset request body: %w", err)
+				}
+			}
 		}
 
 		if c.verbose {
