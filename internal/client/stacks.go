@@ -199,7 +199,10 @@ func (s *StackService) Update(stackID, endpointID int, stackFileContent string, 
 
 	payload := updatePayload{
 		StackFileContent: stackFileContent,
-		Env:              env,
+	}
+
+	if len(env) > 0 {
+		payload.Env = env
 	}
 
 	path := fmt.Sprintf("stacks/%d?endpointId=%d", stackID, endpointID)
