@@ -28,6 +28,7 @@ type Client struct {
 	token      string
 	username   string
 	verbose    bool
+	dryRun     bool
 	maxRetries int
 	retryDelay time.Duration
 }
@@ -37,6 +38,12 @@ type ClientOption func(*Client)
 func WithVerbose(verbose bool) ClientOption {
 	return func(c *Client) {
 		c.verbose = verbose
+	}
+}
+
+func WithDryRun(dryRun bool) ClientOption {
+	return func(c *Client) {
+		c.dryRun = dryRun
 	}
 }
 
@@ -217,10 +224,49 @@ func (c *Client) do(req *http.Request) (*http.Response, error) {
 	return resp, nil
 }
 
+func (c *Client) generateCurlCommand(req *http.Request) string {
+	var curlCmd strings.Builder
+	curlCmd.WriteString("curl -X ")
+	curlCmd.WriteString(req.Method)
+
+	for key, values := range req.Header {
+		for _, value := range values {
+			curlCmd.WriteString(" \\\n  -H '")
+			curlCmd.WriteString(key)
+			curlCmd.WriteString(": ")
+			curlCmd.WriteString(value)
+			curlCmd.WriteString("'")
+		}
+	}
+
+	if req.Body != nil && req.GetBody != nil {
+		body, err := req.GetBody()
+		if err == nil {
+			bodyBytes, err := io.ReadAll(body)
+			if err == nil && len(bodyBytes) > 0 {
+				curlCmd.WriteString(" \\\n  -d '")
+				curlCmd.WriteString(string(bodyBytes))
+				curlCmd.WriteString("'")
+			}
+		}
+	}
+
+	curlCmd.WriteString(" \\\n  '")
+	curlCmd.WriteString(req.URL.String())
+	curlCmd.WriteString("'")
+
+	return curlCmd.String()
+}
+
 func (c *Client) DoRequest(method, path string, body interface{}, result interface{}) error {
 	req, err := c.newRequest(method, path, body)
 	if err != nil {
 		return err
+	}
+
+	if c.dryRun {
+		fmt.Println(c.generateCurlCommand(req))
+		return nil
 	}
 
 	resp, err := c.do(req)

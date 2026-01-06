@@ -240,3 +240,5 @@ See the [PRD document](.taskmaster/docs/prd.txt) for detailed feature roadmap an
 - Colored output
 - Progress bars for long operations
 - Plugin system for extensions
+
+https://app.swaggerhub.com/apis/portainer/portainer-ce/2.33.6

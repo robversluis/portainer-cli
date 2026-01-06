@@ -51,7 +51,7 @@ var stacksListCmd = &cobra.Command{
 			return fmt.Errorf("failed to get profile: %w", err)
 		}
 
-		c, err := client.NewClient(profile, client.WithVerbose(GetVerbose()))
+		c, err := client.NewClient(profile, GetClientOptions()...)
 		if err != nil {
 			return fmt.Errorf("failed to create client: %w", err)
 		}
@@ -145,7 +145,7 @@ var stacksDeployCmd = &cobra.Command{
 			return fmt.Errorf("failed to get profile: %w", err)
 		}
 
-		c, err := client.NewClient(profile, client.WithVerbose(GetVerbose()))
+		c, err := client.NewClient(profile, GetClientOptions()...)
 		if err != nil {
 			return fmt.Errorf("failed to create client: %w", err)
 		}
@@ -191,7 +191,7 @@ var stacksGetCmd = &cobra.Command{
 			return fmt.Errorf("failed to get profile: %w", err)
 		}
 
-		c, err := client.NewClient(profile, client.WithVerbose(GetVerbose()))
+		c, err := client.NewClient(profile, GetClientOptions()...)
 		if err != nil {
 			return fmt.Errorf("failed to create client: %w", err)
 		}
@@ -265,7 +265,7 @@ var stacksRemoveCmd = &cobra.Command{
 			return fmt.Errorf("failed to get profile: %w", err)
 		}
 
-		c, err := client.NewClient(profile, client.WithVerbose(GetVerbose()))
+		c, err := client.NewClient(profile, GetClientOptions()...)
 		if err != nil {
 			return fmt.Errorf("failed to create client: %w", err)
 		}
@@ -332,12 +332,7 @@ var stacksUpdateCmd = &cobra.Command{
 			return fmt.Errorf("failed to get profile: %w", err)
 		}
 
-		opts := []client.ClientOption{client.WithVerbose(GetVerbose())}
-		if GetNoRetry() {
-			opts = append(opts, client.WithMaxRetries(0))
-		}
-
-		c, err := client.NewClient(profile, opts...)
+		c, err := client.NewClient(profile, GetClientOptions()...)
 		if err != nil {
 			return fmt.Errorf("failed to create client: %w", err)
 		}

@@ -34,7 +34,7 @@ var networksListCmd = &cobra.Command{
 			return fmt.Errorf("failed to get profile: %w", err)
 		}
 
-		c, err := client.NewClient(profile, client.WithVerbose(GetVerbose()))
+		c, err := client.NewClient(profile, GetClientOptions()...)
 		if err != nil {
 			return fmt.Errorf("failed to create client: %w", err)
 		}
@@ -88,7 +88,7 @@ var networksInspectCmd = &cobra.Command{
 			return fmt.Errorf("failed to get profile: %w", err)
 		}
 
-		c, err := client.NewClient(profile, client.WithVerbose(GetVerbose()))
+		c, err := client.NewClient(profile, GetClientOptions()...)
 		if err != nil {
 			return fmt.Errorf("failed to create client: %w", err)
 		}
@@ -180,7 +180,7 @@ var networksCreateCmd = &cobra.Command{
 			return fmt.Errorf("failed to get profile: %w", err)
 		}
 
-		c, err := client.NewClient(profile, client.WithVerbose(GetVerbose()))
+		c, err := client.NewClient(profile, GetClientOptions()...)
 		if err != nil {
 			return fmt.Errorf("failed to create client: %w", err)
 		}
@@ -231,7 +231,7 @@ var networksRemoveCmd = &cobra.Command{
 			return fmt.Errorf("failed to get profile: %w", err)
 		}
 
-		c, err := client.NewClient(profile, client.WithVerbose(GetVerbose()))
+		c, err := client.NewClient(profile, GetClientOptions()...)
 		if err != nil {
 			return fmt.Errorf("failed to create client: %w", err)
 		}
@@ -267,7 +267,7 @@ var networksPruneCmd = &cobra.Command{
 			return fmt.Errorf("failed to get profile: %w", err)
 		}
 
-		c, err := client.NewClient(profile, client.WithVerbose(GetVerbose()))
+		c, err := client.NewClient(profile, GetClientOptions()...)
 		if err != nil {
 			return fmt.Errorf("failed to create client: %w", err)
 		}

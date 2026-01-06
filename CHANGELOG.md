@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.8] - 2026-01-06
+
+### Added
+- **Dry-Run Mode**: New global `--dry-run` flag to output curl commands instead of executing HTTP requests
+  - Outputs complete curl command with all headers, method, body, and URL
+  - Works with all commands that make API requests
+  - Useful for debugging, testing, and understanding API interactions
+  - No actual HTTP requests are made when dry-run is enabled
+
+### Fixed
+- **Stack Update Dry-Run Support**: Fixed stack update command to properly respect dry-run flag
+  - Changed `Update` method to use `DoRequest` instead of bypassing dry-run check
+  - Ensures consistent dry-run behavior across all commands
+
+### Technical Details
+- Added `dryRun` field to `Client` struct
+- Created `WithDryRun()` client option
+- Implemented `generateCurlCommand()` method for curl output generation
+- Updated `GetClientOptions()` helper to include dry-run option
+- All command files updated to use centralized `GetClientOptions()` helper
+
 ## [1.0.4] - 2025-12-17
 
 ### Fixed
@@ -145,6 +166,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Environment management documentation
 - Configuration examples and best practices
 
+[1.0.8]: https://github.com/robversluis/portainer-cli/releases/tag/v1.0.8
 [1.0.4]: https://github.com/robversluis/portainer-cli/releases/tag/v1.0.4
 [1.0.3]: https://github.com/robversluis/portainer-cli/releases/tag/v1.0.3
 [1.0.2]: https://github.com/robversluis/portainer-cli/releases/tag/v1.0.2

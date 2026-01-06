@@ -207,18 +207,7 @@ func (s *StackService) Update(stackID, endpointID int, stackFileContent string, 
 
 	path := fmt.Sprintf("stacks/%d?endpointId=%d", stackID, endpointID)
 
-	req, err := s.client.newRequest(http.MethodPut, path, payload)
-	if err != nil {
-		return err
-	}
-
-	resp, err := s.client.do(req)
-	if err != nil {
-		return fmt.Errorf("failed to update stack: %w", err)
-	}
-	defer resp.Body.Close()
-
-	return checkResponse(resp)
+	return s.client.DoRequest(http.MethodPut, path, payload, nil)
 }
 
 func (s *StackService) Remove(stackID, endpointID int) error {

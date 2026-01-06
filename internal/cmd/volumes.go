@@ -34,7 +34,7 @@ var volumesListCmd = &cobra.Command{
 			return fmt.Errorf("failed to get profile: %w", err)
 		}
 
-		c, err := client.NewClient(profile, client.WithVerbose(GetVerbose()))
+		c, err := client.NewClient(profile, GetClientOptions()...)
 		if err != nil {
 			return fmt.Errorf("failed to create client: %w", err)
 		}
@@ -92,7 +92,7 @@ var volumesInspectCmd = &cobra.Command{
 			return fmt.Errorf("failed to get profile: %w", err)
 		}
 
-		c, err := client.NewClient(profile, client.WithVerbose(GetVerbose()))
+		c, err := client.NewClient(profile, GetClientOptions()...)
 		if err != nil {
 			return fmt.Errorf("failed to create client: %w", err)
 		}
@@ -167,7 +167,7 @@ var volumesCreateCmd = &cobra.Command{
 			return fmt.Errorf("failed to get profile: %w", err)
 		}
 
-		c, err := client.NewClient(profile, client.WithVerbose(GetVerbose()))
+		c, err := client.NewClient(profile, GetClientOptions()...)
 		if err != nil {
 			return fmt.Errorf("failed to create client: %w", err)
 		}
@@ -217,7 +217,7 @@ var volumesRemoveCmd = &cobra.Command{
 			return fmt.Errorf("failed to get profile: %w", err)
 		}
 
-		c, err := client.NewClient(profile, client.WithVerbose(GetVerbose()))
+		c, err := client.NewClient(profile, GetClientOptions()...)
 		if err != nil {
 			return fmt.Errorf("failed to create client: %w", err)
 		}
@@ -253,7 +253,7 @@ var volumesPruneCmd = &cobra.Command{
 			return fmt.Errorf("failed to get profile: %w", err)
 		}
 
-		c, err := client.NewClient(profile, client.WithVerbose(GetVerbose()))
+		c, err := client.NewClient(profile, GetClientOptions()...)
 		if err != nil {
 			return fmt.Errorf("failed to create client: %w", err)
 		}

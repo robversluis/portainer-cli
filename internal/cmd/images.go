@@ -50,7 +50,7 @@ var imagesListCmd = &cobra.Command{
 			return fmt.Errorf("failed to get profile: %w", err)
 		}
 
-		c, err := client.NewClient(profile, client.WithVerbose(GetVerbose()))
+		c, err := client.NewClient(profile, GetClientOptions()...)
 		if err != nil {
 			return fmt.Errorf("failed to create client: %w", err)
 		}
@@ -128,7 +128,7 @@ var imagesInspectCmd = &cobra.Command{
 			return fmt.Errorf("failed to get profile: %w", err)
 		}
 
-		c, err := client.NewClient(profile, client.WithVerbose(GetVerbose()))
+		c, err := client.NewClient(profile, GetClientOptions()...)
 		if err != nil {
 			return fmt.Errorf("failed to create client: %w", err)
 		}
@@ -216,7 +216,7 @@ var imagesPullCmd = &cobra.Command{
 			return fmt.Errorf("failed to get profile: %w", err)
 		}
 
-		c, err := client.NewClient(profile, client.WithVerbose(GetVerbose()))
+		c, err := client.NewClient(profile, GetClientOptions()...)
 		if err != nil {
 			return fmt.Errorf("failed to create client: %w", err)
 		}
@@ -260,7 +260,7 @@ var imagesRemoveCmd = &cobra.Command{
 			return fmt.Errorf("failed to get profile: %w", err)
 		}
 
-		c, err := client.NewClient(profile, client.WithVerbose(GetVerbose()))
+		c, err := client.NewClient(profile, GetClientOptions()...)
 		if err != nil {
 			return fmt.Errorf("failed to create client: %w", err)
 		}
@@ -301,7 +301,7 @@ var imagesPruneCmd = &cobra.Command{
 			return fmt.Errorf("failed to get profile: %w", err)
 		}
 
-		c, err := client.NewClient(profile, client.WithVerbose(GetVerbose()))
+		c, err := client.NewClient(profile, GetClientOptions()...)
 		if err != nil {
 			return fmt.Errorf("failed to create client: %w", err)
 		}
@@ -341,7 +341,7 @@ var imagesTagCmd = &cobra.Command{
 			return fmt.Errorf("failed to get profile: %w", err)
 		}
 
-		c, err := client.NewClient(profile, client.WithVerbose(GetVerbose()))
+		c, err := client.NewClient(profile, GetClientOptions()...)
 		if err != nil {
 			return fmt.Errorf("failed to create client: %w", err)
 		}

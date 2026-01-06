@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/robversluis/portainer-cli/internal/client"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -17,6 +18,7 @@ var (
 	verbose      bool
 	quiet        bool
 	noRetry      bool
+	dryRun       bool
 )
 
 var rootCmd = &cobra.Command{
@@ -47,6 +49,7 @@ func init() {
 	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "verbose output")
 	rootCmd.PersistentFlags().BoolVarP(&quiet, "quiet", "q", false, "quiet mode (minimal output)")
 	rootCmd.PersistentFlags().BoolVar(&noRetry, "no-retry", false, "disable retry on failed requests")
+	rootCmd.PersistentFlags().BoolVar(&dryRun, "dry-run", false, "output curl command instead of executing request")
 
 	_ = viper.BindPFlag("url", rootCmd.PersistentFlags().Lookup("url"))
 	_ = viper.BindPFlag("api_key", rootCmd.PersistentFlags().Lookup("api-key"))
@@ -110,6 +113,20 @@ func GetQuiet() bool {
 
 func GetNoRetry() bool {
 	return noRetry
+}
+
+func GetDryRun() bool {
+	return dryRun
+}
+
+func GetClientOptions() []client.ClientOption {
+	var opts []client.ClientOption
+	opts = append(opts, client.WithVerbose(GetVerbose()))
+	opts = append(opts, client.WithDryRun(GetDryRun()))
+	if GetNoRetry() {
+		opts = append(opts, client.WithMaxRetries(0))
+	}
+	return opts
 }
 
 var completionCmd = &cobra.Command{

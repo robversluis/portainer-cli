@@ -121,7 +121,7 @@ var authStatusCmd = &cobra.Command{
 			return fmt.Errorf("failed to get profile: %w", err)
 		}
 
-		c, err := client.NewClient(profile, client.WithVerbose(GetVerbose()))
+		c, err := client.NewClient(profile, GetClientOptions()...)
 		if err != nil {
 			return fmt.Errorf("failed to create client: %w", err)
 		}
