@@ -345,15 +345,23 @@ var stacksUpdateCmd = &cobra.Command{
 		}
 
 		var env []client.StackEnv
-		for _, envVar := range envVars {
-			parts := strings.SplitN(envVar, "=", 2)
-			if len(parts) != 2 {
-				return fmt.Errorf("invalid env format: %s (expected KEY=VALUE)", envVar)
+		if len(envVars) > 0 {
+			for _, envVar := range envVars {
+				parts := strings.SplitN(envVar, "=", 2)
+				if len(parts) != 2 {
+					return fmt.Errorf("invalid env format: %s (expected KEY=VALUE)", envVar)
+				}
+				env = append(env, client.StackEnv{
+					Name:  parts[0],
+					Value: parts[1],
+				})
 			}
-			env = append(env, client.StackEnv{
-				Name:  parts[0],
-				Value: parts[1],
-			})
+		} else {
+			existingStack, err := stackService.Get(stackID)
+			if err != nil {
+				return fmt.Errorf("failed to get existing stack: %w", err)
+			}
+			env = existingStack.Env
 		}
 
 		if err := stackService.Update(stackID, endpointID, content, env); err != nil {
