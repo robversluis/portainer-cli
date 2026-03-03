@@ -76,7 +76,7 @@ portainer-cli containers list --endpoint 1
 portainer-cli stacks deploy --file docker-compose.yml --endpoint 1 --name mystack
 
 # Update a stack
-portainer-cli stacks update 7 --endpoint 3 --file docker-compose.yml
+portainer-cli stacks update 7 --endpoint 3 --file docker-compose.yml --repull
 
 # View container logs
 portainer-cli containers logs my-container --follow
