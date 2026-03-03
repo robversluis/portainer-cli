@@ -327,6 +327,11 @@ var stacksUpdateCmd = &cobra.Command{
 			return err
 		}
 
+		repull, err := cmd.Flags().GetBool("repull")
+		if err != nil {
+			return err
+		}
+
 		profile, err := config.GetProfileFromViper()
 		if err != nil {
 			return fmt.Errorf("failed to get profile: %w", err)
@@ -364,7 +369,7 @@ var stacksUpdateCmd = &cobra.Command{
 			env = existingStack.Env
 		}
 
-		if err := stackService.Update(stackID, endpointID, content, env); err != nil {
+		if err := stackService.Update(stackID, endpointID, content, env, repull); err != nil {
 			return err
 		}
 
@@ -405,6 +410,7 @@ func init() {
 	stacksUpdateCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
 	stacksUpdateCmd.Flags().String("file", "", "Path to stack file (required)")
 	stacksUpdateCmd.Flags().StringArray("env", []string{}, "Environment variables (KEY=VALUE)")
+	stacksUpdateCmd.Flags().Bool("repull", false, "Force repulling images and redeploying the stack")
 	_ = stacksUpdateCmd.MarkFlagRequired("endpoint")
 	_ = stacksUpdateCmd.MarkFlagRequired("file")
 }

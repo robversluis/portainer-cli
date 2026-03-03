@@ -191,14 +191,16 @@ func (s *StackService) Deploy(endpointID int, name, stackFileContent string, env
 	return &stack, nil
 }
 
-func (s *StackService) Update(stackID, endpointID int, stackFileContent string, env []StackEnv) error {
+func (s *StackService) Update(stackID, endpointID int, stackFileContent string, env []StackEnv, repull bool) error {
 	type updatePayload struct {
-		StackFileContent string     `json:"stackFileContent"`
-		Env              []StackEnv `json:"env,omitempty"`
+		StackFileContent       string     `json:"stackFileContent"`
+		Env                    []StackEnv `json:"env,omitempty"`
+		RepullImageAndRedeploy bool       `json:"repullImageAndRedeploy"`
 	}
 
 	payload := updatePayload{
-		StackFileContent: stackFileContent,
+		StackFileContent:       stackFileContent,
+		RepullImageAndRedeploy: repull,
 	}
 
 	if len(env) > 0 {
