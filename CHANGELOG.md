@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.2] - 2026-09-07
+
+### Fixed
+- **Stack Deploy on Portainer 2.19+**: `stacks deploy` could not create a stack against
+  recent Portainer versions
+  - Portainer 2.19 replaced `POST /stacks?type=..&method=..` with
+    `POST /stacks/create/{type}/{method}` and 2.45 removed the old route, which answered
+    `405 Method Not Allowed`
+  - The call now goes to `/stacks/create/standalone/string` with a JSON body instead of a
+    multipart form
+  - As a result `--dry-run` now works for `stacks deploy` too, because the request no
+    longer bypasses `DoRequest`
+  - Verified against Portainer 2.45.0; covered by a regression test that pins the route,
+    the query string and the JSON body
+
+## [1.1.1] - 2026-08-11
+
+### Added
+- **Stack Update Repull**: New `--repull` flag on `stacks update` to pull the images again
+  before redeploying
+
 ## [1.0.9] - 2026-01-26
 
 ### Fixed

@@ -1,11 +1,7 @@
 package client
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
-	"io"
-	"mime/multipart"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -138,54 +134,28 @@ func (s *StackService) DeployFromFile(endpointID int, name, filePath string, env
 }
 
 func (s *StackService) Deploy(endpointID int, name, stackFileContent string, env []StackEnv) (*Stack, error) {
-	body := &bytes.Buffer{}
-	writer := multipart.NewWriter(body)
-
-	if err := writer.WriteField("Name", name); err != nil {
-		return nil, fmt.Errorf("failed to write name field: %w", err)
+	type deployPayload struct {
+		Name             string     `json:"name"`
+		StackFileContent string     `json:"stackFileContent"`
+		Env              []StackEnv `json:"env,omitempty"`
 	}
 
-	if err := writer.WriteField("StackFileContent", stackFileContent); err != nil {
-		return nil, fmt.Errorf("failed to write stack file content: %w", err)
+	payload := deployPayload{
+		Name:             name,
+		StackFileContent: stackFileContent,
 	}
 
 	if len(env) > 0 {
-		envJSON, err := json.Marshal(env)
-		if err != nil {
-			return nil, fmt.Errorf("failed to marshal env: %w", err)
-		}
-		if err := writer.WriteField("Env", string(envJSON)); err != nil {
-			return nil, fmt.Errorf("failed to write env field: %w", err)
-		}
+		payload.Env = env
 	}
 
-	if err := writer.Close(); err != nil {
-		return nil, fmt.Errorf("failed to close multipart writer: %w", err)
-	}
-
-	path := fmt.Sprintf("stacks?type=2&method=string&endpointId=%d", endpointID)
-
-	req, err := s.client.newRequest(http.MethodPost, path, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	req.Header.Set("Content-Type", writer.FormDataContentType())
-	req.Body = io.NopCloser(body)
-
-	resp, err := s.client.do(req)
-	if err != nil {
-		return nil, fmt.Errorf("failed to deploy stack: %w", err)
-	}
-	defer resp.Body.Close()
-
-	if err := checkResponse(resp); err != nil {
-		return nil, err
-	}
+	// Portainer 2.19 replaced POST /stacks?type=..&method=.. with this route and
+	// removed the old one in 2.45, where it now answers 405.
+	path := fmt.Sprintf("stacks/create/standalone/string?endpointId=%d", endpointID)
 
 	var stack Stack
-	if err := json.NewDecoder(resp.Body).Decode(&stack); err != nil {
-		return nil, fmt.Errorf("failed to decode response: %w", err)
+	if err := s.client.DoRequest(http.MethodPost, path, payload, &stack); err != nil {
+		return nil, fmt.Errorf("failed to deploy stack: %w", err)
 	}
 
 	return &stack, nil
