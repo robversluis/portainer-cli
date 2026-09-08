@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-09-08
+
+### Added
+- **Stack Update Prune**: New `--prune` flag on `stacks update` to remove containers for
+  services that are no longer in the stack file
+  - Without it Portainer leaves them running as orphans it will never touch again, so a
+    service deleted from a compose file keeps serving until someone removes it by hand
+  - Sends `prune` on `PUT /stacks/{id}`; off by default, because pruning is destructive
+  - Covered by tests that pin the request body both with and without the flag
+
 ## [1.1.2] - 2026-09-07
 
 ### Fixed

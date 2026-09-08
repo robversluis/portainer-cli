@@ -161,16 +161,20 @@ func (s *StackService) Deploy(endpointID int, name, stackFileContent string, env
 	return &stack, nil
 }
 
-func (s *StackService) Update(stackID, endpointID int, stackFileContent string, env []StackEnv, repull bool) error {
+func (s *StackService) Update(stackID, endpointID int, stackFileContent string, env []StackEnv, repull, prune bool) error {
 	type updatePayload struct {
 		StackFileContent       string     `json:"stackFileContent"`
 		Env                    []StackEnv `json:"env,omitempty"`
 		RepullImageAndRedeploy bool       `json:"repullImageAndRedeploy"`
+		// Without this Portainer leaves containers for services that are no longer in
+		// the compose file running, as orphans it will never touch again.
+		Prune bool `json:"prune"`
 	}
 
 	payload := updatePayload{
 		StackFileContent:       stackFileContent,
 		RepullImageAndRedeploy: repull,
+		Prune:                  prune,
 	}
 
 	if len(env) > 0 {
