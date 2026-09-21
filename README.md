@@ -78,6 +78,9 @@ portainer-cli stacks deploy --file docker-compose.yml --endpoint 1 --name mystac
 # Update a stack
 portainer-cli stacks update 7 --endpoint 3 --file docker-compose.yml --repull --prune
 
+# Point a stack at the environment its containers actually run on
+portainer-cli stacks associate 7 --endpoint 3
+
 # View container logs
 portainer-cli containers logs my-container --follow
 
@@ -137,7 +140,7 @@ Override configuration with environment variables:
 - `config`: Configuration management
 - `environments`: Manage Portainer environments/endpoints
 - `containers`: Docker container operations (list, logs, inspect, start, stop, restart, remove)
-- `stacks`: Stack deployment and management (list, deploy, get, update, remove)
+- `stacks`: Stack deployment and management (list, deploy, get, update, remove, associate)
 - `images`: Docker image operations (list, inspect, pull, remove, prune, tag)
 - `networks`: Docker network operations (list, inspect, create, remove, prune)
 - `volumes`: Docker volume operations (list, inspect, create, remove, prune)

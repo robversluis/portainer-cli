@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-09-21
+
+### Added
+- **Stack Associate**: New `stacks associate <id> --endpoint <n>` command, wrapping
+  Portainer's `PUT /stacks/{id}/associate`
+  - Portainer stores the environment on the stack record. When it stops matching where
+    the containers actually run, the stack is no longer treated as one of Portainer's
+    own: the UI reports "This stack was created outside of Portainer. Control over this
+    stack is limited" and `stacks get` returns status 4
+  - The failure that costs the most time is that `stacks update` still answers 200 in
+    that state. The new compose file is stored and the deployment is carried out against
+    the *stack's* environment, so CI reports a successful deploy while the intended host
+    is never touched
+  - Rewrites only the stack record and its resource control - no container is stopped,
+    created or removed - so it is safe to run against a live stack
+  - `--orphaned-running` defaults to true: the containers are already up on the target
+    environment and should be adopted rather than redeployed
+
 ## [1.2.0] - 2026-09-08
 
 ### Added
