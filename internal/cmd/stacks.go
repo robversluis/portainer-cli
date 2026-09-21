@@ -175,6 +175,56 @@ var stacksDeployCmd = &cobra.Command{
 	},
 }
 
+var stacksAssociateCmd = &cobra.Command{
+	Use:   "associate [id]",
+	Short: "Associate a stack with the environment its containers run on",
+	Long: `Re-home a stack record onto the given environment.
+
+Portainer keeps the environment on the stack record. When it does not match
+where the containers actually run, Portainer treats the stack as foreign - the
+UI shows "This stack was created outside of Portainer. Control over this stack
+is limited", and "stacks update" is accepted and stored but never applied, so
+deploys report success while nothing is redeployed.`,
+	Args: cobra.ExactArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		endpointID, err := cmd.Flags().GetInt("endpoint")
+		if err != nil {
+			return err
+		}
+		if endpointID == 0 {
+			return fmt.Errorf("--endpoint is required")
+		}
+
+		orphanedRunning, err := cmd.Flags().GetBool("orphaned-running")
+		if err != nil {
+			return err
+		}
+
+		var stackID int
+		if _, err := fmt.Sscanf(args[0], "%d", &stackID); err != nil {
+			return fmt.Errorf("stack id must be numeric, got %q", args[0])
+		}
+
+		profile, err := config.GetProfileFromViper()
+		if err != nil {
+			return fmt.Errorf("failed to get profile: %w", err)
+		}
+
+		c, err := client.NewClient(profile, GetClientOptions()...)
+		if err != nil {
+			return fmt.Errorf("failed to create client: %w", err)
+		}
+
+		if err := client.NewStackService(c).Associate(stackID, endpointID, orphanedRunning); err != nil {
+			return err
+		}
+
+		fmt.Printf("Stack %d associated with environment %d\n", stackID, endpointID)
+
+		return nil
+	},
+}
+
 var stacksGetCmd = &cobra.Command{
 	Use:   "get [id or name]",
 	Short: "Get stack details",
@@ -393,6 +443,7 @@ func init() {
 	stacksCmd.AddCommand(stacksGetCmd)
 	stacksCmd.AddCommand(stacksUpdateCmd)
 	stacksCmd.AddCommand(stacksRemoveCmd)
+	stacksCmd.AddCommand(stacksAssociateCmd)
 
 	stacksListCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
 	stacksListCmd.Flags().BoolP("watch", "w", false, "Watch for changes and continuously update")
@@ -408,6 +459,9 @@ func init() {
 	_ = stacksDeployCmd.MarkFlagRequired("endpoint")
 
 	stacksGetCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required for name lookup)")
+
+	stacksAssociateCmd.Flags().Int("endpoint", 0, "Environment endpoint ID the containers run on (required)")
+	stacksAssociateCmd.Flags().Bool("orphaned-running", true, "The stack's containers are already running on that environment")
 
 	stacksRemoveCmd.Flags().Int("endpoint", 0, "Environment endpoint ID (required)")
 	_ = stacksRemoveCmd.MarkFlagRequired("endpoint")

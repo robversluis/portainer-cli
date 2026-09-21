@@ -186,6 +186,24 @@ func (s *StackService) Update(stackID, endpointID int, stackFileContent string, 
 	return s.client.DoRequest(http.MethodPut, path, payload, nil)
 }
 
+// Associate re-homes a stack record onto the environment its containers actually
+// run on.
+//
+// Portainer stores the environment on the stack itself. When that no longer
+// matches reality - containers moved to another host, or the stack was first
+// registered against the wrong environment - Portainer stops treating it as one
+// of its own: the UI labels it "created outside of Portainer. Control over this
+// stack is limited", and an update is accepted and stored but never applied, so
+// deploys report success and change nothing.
+func (s *StackService) Associate(stackID, endpointID int, orphanedRunning bool) error {
+	path := fmt.Sprintf(
+		"stacks/%d/associate?endpointId=%d&swarmId=&orphanedRunning=%t",
+		stackID, endpointID, orphanedRunning,
+	)
+
+	return s.client.DoRequest(http.MethodPut, path, nil, nil)
+}
+
 func (s *StackService) Remove(stackID, endpointID int) error {
 	path := fmt.Sprintf("stacks/%d?endpointId=%d", stackID, endpointID)
 
